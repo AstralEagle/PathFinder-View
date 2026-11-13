@@ -379,6 +379,47 @@ button {
   text-align: right;
 }
 
+/* Liste qui défile à l'intérieur de sa carte, la page restant fixe. */
+.scroll-list {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.skill-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Sur grand écran, la carte Compétences ne doit pas être coupée en colonnes. */
+.tab-panel .skills-card {
+  column-span: all;
+}
+
+.segmented {
+  display: inline-flex;
+  border: 2px solid var(--green);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.segmented button {
+  min-width: 44px;
+  min-height: 36px;
+  padding: 0 0.6rem;
+  border: none;
+  background: #fff;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.segmented button.active {
+  background: var(--green);
+  color: var(--parchment);
+}
+
 .legend {
   font-size: 0.8rem;
   color: var(--ink-soft);
