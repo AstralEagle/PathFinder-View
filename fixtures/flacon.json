@@ -1,0 +1,209 @@
+{
+  "success": true,
+  "build": {
+    "name": "Flacon \"Oeil de Taupe\"",
+    "class": "Gunslinger",
+    "dualClass": null,
+    "level": 4,
+    "xp": 0,
+    "ancestry": "Goblin",
+    "heritage": "Tailed Goblin",
+    "background": "Hunter",
+    "alignment": "N",
+    "gender": "Masculin",
+    "age": "17",
+    "deity": "Not set",
+    "size": 1,
+    "sizeName": "Small",
+    "keyability": "dex",
+    "languages": ["Common", "Goblin", "Orcish"],
+    "rituals": [],
+    "resistances": [],
+    "inventorMods": [],
+    "abilities": {
+      "str": 14,
+      "dex": 18,
+      "con": 14,
+      "int": 10,
+      "wis": 8,
+      "cha": 14,
+      "breakdown": {
+        "ancestryFree": ["Con"],
+        "ancestryBoosts": ["Dex", "Cha"],
+        "ancestryFlaws": ["Wis"],
+        "backgroundBoosts": ["Dex", "Str"],
+        "classBoosts": ["Dex"],
+        "mapLevelledBoosts": {
+          "1": ["Dex", "Con", "Str", "Cha"]
+        }
+      }
+    },
+    "attributes": {
+      "ancestryhp": 6,
+      "classhp": 8,
+      "bonushp": 0,
+      "bonushpPerLevel": 0,
+      "speed": 25,
+      "speedBonus": 5
+    },
+    "proficiencies": {
+      "classDC": 2,
+      "perception": 4,
+      "fortitude": 4,
+      "reflex": 4,
+      "will": 4,
+      "heavy": 0,
+      "medium": 2,
+      "light": 2,
+      "unarmored": 2,
+      "advanced": 0,
+      "martial": 2,
+      "simple": 2,
+      "unarmed": 2,
+      "castingArcane": 0,
+      "castingDivine": 0,
+      "castingOccult": 0,
+      "castingPrimal": 0,
+      "acrobatics": 2,
+      "arcana": 0,
+      "athletics": 2,
+      "crafting": 0,
+      "deception": 0,
+      "diplomacy": 0,
+      "intimidation": 0,
+      "medicine": 0,
+      "nature": 0,
+      "occultism": 0,
+      "performance": 0,
+      "religion": 0,
+      "society": 0,
+      "stealth": 4,
+      "survival": 2,
+      "thievery": 2,
+      "piloting": 0,
+      "computers": 0
+    },
+    "mods": {},
+    "feats": [
+      ["Survey Wildlife", null, "Awarded Feat", 1],
+      ["Combat Climber", null, "Awarded Feat", 1],
+      ["Tailed Goblin", null, "Heritage", 1, "Heritage Feat", "standardChoice", null],
+      ["Crossbow Crack Shot", null, "Class Feat", 1, "Gunslinger Feat 1", "standardChoice", null],
+      ["Very Sneaky", null, "Ancestry Feat", 1, "Goblin Feat 1", "standardChoice", null],
+      ["Cat Fall", null, "Skill Feat", 2, "Skill Feat 2", "standardChoice", null],
+      ["Hit the Dirt!", null, "Class Feat", 2, "Gunslinger Feat 2", "standardChoice", null],
+      ["Fleet", null, "General Feat", 3, "General Feat 3", "standardChoice", null],
+      ["Quiet Allies", null, "Skill Feat", 4, "Skill Feat 4", "standardChoice", null],
+      ["Running Reload", null, "Class Feat", 4, "Gunslinger Feat 4", "standardChoice", null]
+    ],
+    "specials": [
+      "Way of the Sniper",
+      "Covered Reload",
+      "One Shot, One Kill",
+      "Slinger's Precision",
+      "Darkvision",
+      "Stubborn",
+      "Tailed Goblin"
+    ],
+    "lores": [["Tanning", 2]],
+    "equipmentContainers": {
+      "fc374284-9f39-4953-8485-9e355ef0c6fa": {
+        "containerName": "Backpack",
+        "bagOfHolding": false,
+        "backpack": true,
+        "augmentations": false
+      }
+    },
+    "equipment": [
+      ["Bolts", 20, "Invested"],
+      ["Backpack", 1, "Invested"],
+      ["Bedroll", 1, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Chalk", 10, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Flint and Steel", 1, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Rope", 1, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Rations", 2, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Torch", 5, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Waterskin", 1, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Soap", 1, "fc374284-9f39-4953-8485-9e355ef0c6fa", "Invested"],
+      ["Healing Potion (Minor)", 2, "Invested"],
+      ["Thieves' Toolkit", 1, "Invested"]
+    ],
+    "specificProficiencies": {
+      "trained": [],
+      "expert": ["Arbalest"],
+      "master": [],
+      "legendary": []
+    },
+    "weapons": [
+      {
+        "name": "Arbalest",
+        "qty": 1,
+        "prof": "martial",
+        "die": "d10",
+        "pot": 1,
+        "str": "striking",
+        "mat": null,
+        "display": "+1 Striking Arbalest",
+        "runes": [],
+        "damageType": "P",
+        "attack": 13,
+        "damageBonus": 0,
+        "extraDamage": ["+2 precision"],
+        "increasedDice": false,
+        "isInventor": false,
+        "grade": ""
+      },
+      {
+        "name": "Dagger",
+        "qty": 1,
+        "prof": "simple",
+        "die": "d4",
+        "pot": 0,
+        "str": "",
+        "mat": null,
+        "display": "Dagger",
+        "runes": [],
+        "damageType": "P",
+        "attack": 10,
+        "damageBonus": 2,
+        "extraDamage": [],
+        "increasedDice": false,
+        "isInventor": false,
+        "grade": ""
+      }
+    ],
+    "money": {
+      "cp": 0,
+      "sp": 1,
+      "gp": 17,
+      "pp": 0
+    },
+    "armor": [
+      {
+        "name": "Leather Armor",
+        "qty": 1,
+        "prof": "light",
+        "pot": 0,
+        "res": "",
+        "mat": null,
+        "display": "Leather",
+        "worn": true,
+        "runes": [],
+        "grade": ""
+      }
+    ],
+    "spellCasters": [],
+    "focusPoints": 0,
+    "focus": {},
+    "formula": [],
+    "acTotal": {
+      "acProfBonus": 6,
+      "acAbilityBonus": 4,
+      "acItemBonus": 1,
+      "acTotal": 21,
+      "shieldBonus": null
+    },
+    "pets": [],
+    "familiars": []
+  }
+}

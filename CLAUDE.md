@@ -16,7 +16,13 @@ Le document de référence complet est [CADRAGE.md](CADRAGE.md) : périmètre V1
 - `vite-plugin-pwa` pour la PWA
 - Vitest pour les tests (module de calcul et parseur, cas de référence « Flacon »)
 - ESLint + Prettier
-- Code sur GitHub, site sur Render (_Static Site_, build `npm ci && npm run build`, dossier `dist`)
+- Code sur GitHub, site sur Render (_Static Site_, build `npm ci && npm run build`, dossier `dist`) : hébergement prévu plus tard
+
+## Organisation du code
+
+- `src/pathbuilder/` : types et parseur défensif du JSON Pathbuilder (renvoie un modèle `Character` normalisé).
+- `src/rules/` : calculs purs (modificateurs, maîtrise, PV, CA, sauvegardes, compétences, attaques).
+- `fixtures/` : exports Pathbuilder réels utilisés par les tests (`flacon.json`).
 
 ## Principes
 
@@ -27,10 +33,10 @@ Le document de référence complet est [CADRAGE.md](CADRAGE.md) : périmètre V1
 - Aucun texte de règles recopié des livres, aucun visuel ni logo de Paizo.
 - Interface en français. Confirmer toute action destructrice.
 
-## Commandes et agents
+## Commandes
 
-- Gestionnaire de paquets : **npm** (workspaces).
-- Utiliser des **commandes simples**, une par appel, qui correspondent aux autorisations de [.claude/settings.json](.claude/settings.json) : `npm …`, `npx …` (nest, prisma, expo), `git …`, `ls`, `mkdir`, etc.
-- Éviter les chaînes (`&&`, `;`, `|`), les `cd` et les scripts inline ; préférer l'option du dossier de travail (`npm --prefix apps/api …`, `npm -w apps/api …`) ou des chemins.
+- Gestionnaire de paquets : **npm** (un seul projet à la racine, pas de workspaces).
+- Scripts : `npm run dev`, `npm test`, `npm run lint`, `npm run format`, `npm run build`.
+- **Chaque commande n'exécute qu'une seule action**, une par appel, en accord avec les autorisations de [.claude/settings.json](.claude/settings.json) : `npm …`, `npx …`, `node …`, `git …`, `ls`, `mkdir`, `cp`, etc.
+- **Jamais de chaînes ni de combinaisons** : pas de `|`, `&`, `&&`, `;`, pas de `cd` ni de script inline. Utiliser des chemins.
 - Préférer les outils Read / Edit / Write / Glob / Grep aux commandes shell pour lire et modifier les fichiers.
-- Les tâches longues ou parallélisables peuvent être confiées à des **sous-agents** (ex : un agent pour l'API, un pour le mobile).
