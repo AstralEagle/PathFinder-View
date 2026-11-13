@@ -1,5 +1,6 @@
 import type { Character, EquipmentItem } from '../pathbuilder/model.ts';
 import { maxHp } from '../rules/character.ts';
+import type { NamedAmmo } from './namedAmmo.ts';
 
 /** État de jeu modifié en partie. Le build Pathbuilder, lui, reste en lecture seule. */
 export interface GameState {
@@ -11,6 +12,10 @@ export interface GameState {
   /** Rang de sort → nombre d'emplacements utilisés. */
   spellSlotsUsed: Record<number, number>;
   focusPointsUsed: number;
+  /** Onglet optionnel « Munitions nommées » activé pour ce personnage. */
+  namedAmmoEnabled?: boolean;
+  /** Munitions nommées par le joueur (ex. carreaux baptisés). */
+  namedAmmo?: NamedAmmo[];
   updatedAt: string;
 }
 

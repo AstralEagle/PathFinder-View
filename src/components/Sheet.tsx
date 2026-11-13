@@ -4,6 +4,7 @@ import { maxHp } from '../rules/character.ts';
 import { CombatTab } from './tabs/CombatTab.tsx';
 import { SkillsTab } from './tabs/SkillsTab.tsx';
 import { ActionsTab } from './tabs/ActionsTab.tsx';
+import { NamedAmmoTab } from './tabs/NamedAmmoTab.tsx';
 import { FeatsTab } from './tabs/FeatsTab.tsx';
 import { InventoryTab } from './tabs/InventoryTab.tsx';
 import { SpellsTab } from './tabs/SpellsTab.tsx';
@@ -21,7 +22,7 @@ interface Props {
 
 export function Sheet({ character: c, state, onStateChange, tab, onTabChange }: Props) {
   const max = maxHp(c);
-  const tabs = sheetTabs(c);
+  const tabs = sheetTabs(c, state);
   const current = tabs.some((t) => t.key === tab) ? tab : 'combat';
 
   // Le nom, la classe et le niveau sont affichés dans l'en-tête de l'appli (CharacterTitle).
@@ -50,6 +51,7 @@ export function Sheet({ character: c, state, onStateChange, tab, onTabChange }: 
         {current === 'skills' && <SkillsTab c={c} />}
         {current === 'feats' && <FeatsTab c={c} />}
         {current === 'inventory' && <InventoryTab c={c} state={state} onChange={onStateChange} />}
+        {current === 'ammo' && <NamedAmmoTab state={state} onChange={onStateChange} />}
         {current === 'spells' && <SpellsTab />}
         {current === 'identity' && <IdentityTab c={c} />}
       </div>

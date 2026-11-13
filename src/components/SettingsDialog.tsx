@@ -11,6 +11,9 @@ interface Props {
   /** Personnage ouvert, s'il y en a un. */
   characterName: string | null;
   onChangeCharacter: () => void;
+  /** Onglet optionnel « Munitions nommées » du personnage ouvert. */
+  namedAmmoEnabled: boolean;
+  onToggleNamedAmmo?: (enabled: boolean) => void;
   groupStatus: GroupStatus;
   onReloadGroup: () => void;
   localNames: Dictionary;
@@ -88,6 +91,8 @@ export function SettingsDialog({
   onChange,
   characterName,
   onChangeCharacter,
+  namedAmmoEnabled,
+  onToggleNamedAmmo,
   groupStatus,
   onReloadGroup,
   localNames,
@@ -139,6 +144,21 @@ export function SettingsDialog({
         >
           Changer de personnage
         </button>
+        {onToggleNamedAmmo && (
+          <label className="toggle">
+            <input
+              type="checkbox"
+              checked={namedAmmoEnabled}
+              onChange={(e) => onToggleNamedAmmo(e.target.checked)}
+            />
+            <span>
+              Onglet « Munitions nommées »
+              <span className="radio-hint">
+                Suivre chaque munition baptisée : dans le carquois ou tirée, touches et ratés.
+              </span>
+            </span>
+          </label>
+        )}
       </fieldset>
 
       <fieldset className="setting">

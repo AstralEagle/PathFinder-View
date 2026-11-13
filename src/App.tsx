@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Character } from './pathbuilder/model.ts';
 import { parsePathbuilderText } from './pathbuilder/parse.ts';
 import type { GameState } from './game/state.ts';
+import { setNamedAmmoEnabled } from './game/namedAmmo.ts';
 import {
   addCharacter,
   findByName,
@@ -160,7 +161,7 @@ export default function App() {
 
             {menuOpen && (
               <MenuDrawer
-                tabs={openCharacter ? sheetTabs(openCharacter) : null}
+                tabs={openCharacter ? sheetTabs(openCharacter, open?.state) : null}
                 currentTab={tab}
                 onTab={setTab}
                 onCharacters={goHome}
@@ -176,6 +177,15 @@ export default function App() {
                 settings={settings}
                 onChange={setSettings}
                 characterName={openCharacter?.name ?? null}
+                namedAmmoEnabled={open?.state.namedAmmoEnabled ?? false}
+                onToggleNamedAmmo={
+                  open && openCharacter
+                    ? (enabled) => {
+                        onStateChange(open.id, setNamedAmmoEnabled(open.state, enabled));
+                        if (enabled) setTab('ammo');
+                      }
+                    : undefined
+                }
                 onChangeCharacter={goHome}
                 groupStatus={groupStatus}
                 onReloadGroup={reloadGroup}
