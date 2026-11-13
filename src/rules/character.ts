@@ -145,6 +145,15 @@ export function weaponAttack(w: Weapon): Attack {
   };
 }
 
+/**
+ * Bonus des 1re, 2e et 3e attaques du tour (pénalité d'attaques multiples) :
+ * −5 / −10, ou −4 / −8 pour une arme agile.
+ */
+export function multipleAttackBonuses(attack: number, agile: boolean): [number, number, number] {
+  const step = agile ? 4 : 5;
+  return [attack, attack - step, attack - 2 * step];
+}
+
 /** Formule de dégâts lisible, ex. « 2d10+2 P ». */
 export function damageFormula(a: Attack): string {
   const bonus =

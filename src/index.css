@@ -692,6 +692,46 @@ button {
   color: var(--ink-soft);
 }
 
+.strikes li {
+  padding: 0.35rem 0;
+}
+
+.strike-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75rem;
+}
+
+.strike-map {
+  font-size: 1.15rem;
+  color: var(--green);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--green);
+  margin-bottom: 0.5rem;
+}
+
+.card-head h3 {
+  border-bottom: none;
+  margin: 0;
+}
+
+.link-button {
+  min-height: 44px;
+  padding: 0 0.5rem;
+  background: none;
+  border: none;
+  color: var(--green);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 /* --- Identité --- */
 
 .abilities {

@@ -10,7 +10,7 @@ import {
   speed,
   weaponAttack,
 } from '../../rules/character.ts';
-import { signed, trCore, trCoreOr } from '../../i18n/translate.ts';
+import { extraDamageFr, signed, trCore, trCoreOr } from '../../i18n/translate.ts';
 import { useTr } from '../../sources/TranslationContext.ts';
 import { weaponName } from '../../i18n/itemNames.ts';
 import type { GameState } from '../../game/state.ts';
@@ -29,10 +29,7 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
   );
 }
 
-/** « +2 precision » → « +2 précision ». */
-function extraDamage(s: string): string {
-  return s.replace(/\bprecision\b/i, 'précision');
-}
+const extraDamage = extraDamageFr;
 
 interface Props {
   c: Character;

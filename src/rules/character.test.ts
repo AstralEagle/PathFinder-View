@@ -7,6 +7,7 @@ import {
   damageFormula,
   lore,
   maxHp,
+  multipleAttackBonuses,
   perception,
   save,
   skill,
@@ -70,6 +71,13 @@ describe('Flacon, niveau 4', () => {
     const a = weaponAttack(c.weapons[1]!);
     expect(a.attack).toBe(10);
     expect(damageFormula(a)).toBe('1d4+2 P');
+  });
+});
+
+describe('multipleAttackBonuses', () => {
+  it('−5 / −10, ou −4 / −8 si agile', () => {
+    expect(multipleAttackBonuses(13, false)).toEqual([13, 8, 3]);
+    expect(multipleAttackBonuses(10, true)).toEqual([10, 6, 2]);
   });
 });
 

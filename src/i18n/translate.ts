@@ -13,6 +13,11 @@ export function trCoreOr(section: Section, key: string): string {
   return trCore(section, key) ?? key;
 }
 
+/** Dégâts supplémentaires Pathbuilder : « +2 precision » → « +2 précision ». */
+export function extraDamageFr(s: string): string {
+  return s.replace(/\bprecision\b/i, 'précision');
+}
+
 /** Signe typographique : +4, +0, −1. */
 export function signed(n: number): string {
   return n < 0 ? `−${Math.abs(n)}` : `+${n}`;

@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { Character } from '../../pathbuilder/model.ts';
+import type { Character, Weapon } from '../../pathbuilder/model.ts';
+import { damageFormula, multipleAttackBonuses, weaponAttack } from '../../rules/character.ts';
+import { extraDamageFr, signed, trCore } from '../../i18n/translate.ts';
+import { weaponName } from '../../i18n/itemNames.ts';
+import { useTr } from '../../sources/TranslationContext.ts';
 import {
   ACTION_GROUPS,
   actionGlyph,
@@ -103,16 +107,100 @@ function Groups({ status, empty }: { status: Status; empty: string }) {
   );
 }
 
+/** Traits des armes (pour « agile »), lus dans Foundry pf2e. */
+function useWeaponTraits(weapons: Weapon[]): Record<string, string[]> {
+  const key = weapons.map((w) => w.name).join('|');
+  const [traits, setTraits] = useState<Record<string, string[]>>({});
+  useEffect(() => {
+    let cancelled = false;
+    Promise.allSettled(weapons.map((w) => findFoundryItem('item', w.name))).then((results) => {
+      if (cancelled) return;
+      const out: Record<string, string[]> = {};
+      results.forEach((r, i) => {
+        if (r.status === 'fulfilled' && r.value) out[weapons[i]!.name] = r.value.traits;
+      });
+      setTraits(out);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // `key` résume la liste des armes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  return traits;
+}
+
+/** Frappes avec chaque arme : bonus des 1re / 2e / 3e attaques et dégâts. */
+function Strikes({ weapons }: { weapons: Weapon[] }) {
+  const tr = useTr();
+  const traits = useWeaponTraits(weapons);
+  if (weapons.length === 0) return null;
+
+  return (
+    <div className="action-group">
+      <h4>Frappes</h4>
+      <ul className="actions-list strikes">
+        {weapons.map((w, i) => {
+          const a = weaponAttack(w);
+          const agile = traits[w.name]?.includes('agile') ?? false;
+          const type = trCore('damageTypes', a.damageType) ?? a.damageType;
+          const dice = damageFormula(a).replace(/ \S+$/, '');
+          return (
+            <li key={`${w.name}-${i}`}>
+              <span className="glyph">◆</span>
+              <div className="strike-body">
+                <Name {...weaponName(w, tr)} detail={{ kind: 'item', en: w.name }} />
+                <div className="strike-line">
+                  {a.attack !== null && (
+                    <strong className="strike-map" title="1re / 2e / 3e attaque du tour">
+                      {multipleAttackBonuses(a.attack, agile).map(signed).join(' / ')}
+                    </strong>
+                  )}
+                  <span>
+                    {dice} {type}
+                    {a.extra.map((e) => ` ${extraDamageFr(e)}`).join('')}
+                  </span>
+                </div>
+              </div>
+              <span className="origin">{agile ? 'Agile' : 'Arme'}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+const SHOW_BASIC_KEY = 'pf2.showBasicActions';
+
+function readShowBasic(): boolean {
+  try {
+    return localStorage.getItem(SHOW_BASIC_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
 export function ActionsTab({ c }: { c: Character }) {
   const own = useMemo(() => characterActionCandidates(c), [c]);
   const basic = useMemo(() => basicActionCandidates(), []);
   const ownStatus = useResolvedActions(own);
-  const [showBasic, setShowBasic] = useState(false);
+  const [showBasic, setShowBasic] = useState(readShowBasic);
+
+  function toggleBasic(show: boolean) {
+    setShowBasic(show);
+    try {
+      localStorage.setItem(SHOW_BASIC_KEY, show ? '1' : '0');
+    } catch {
+      // préférence non mémorisée : sans conséquence
+    }
+  }
 
   return (
     <>
       <section className="card">
         <h3>Actions du personnage</h3>
+        <Strikes weapons={c.weapons} />
         <Groups status={ownStatus} empty="Aucun don ni capacité n’est une action." />
         <p className="legend">
           ◆ action · ◆◆ / ◆◆◆ activité · ◇ gratuite · ⟲ réaction · ⏱ exploration
@@ -120,11 +208,18 @@ export function ActionsTab({ c }: { c: Character }) {
       </section>
 
       <section className="card">
-        <h3>Actions de base</h3>
+        <div className="card-head">
+          <h3>Actions de base</h3>
+          {showBasic && (
+            <button type="button" className="link-button" onClick={() => toggleBasic(false)}>
+              Masquer
+            </button>
+          )}
+        </div>
         {showBasic ? (
           <BasicActions candidates={basic} />
         ) : (
-          <button type="button" className="secondary full" onClick={() => setShowBasic(true)}>
+          <button type="button" className="secondary full" onClick={() => toggleBasic(true)}>
             Afficher les actions de base
           </button>
         )}
