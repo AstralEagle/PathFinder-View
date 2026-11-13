@@ -1,10 +1,12 @@
 :root {
   --parchment: #f3ead2;
-  --parchment-dark: #e6d9b5;
+  --parchment-dark: #e2d3aa;
+  --paper: #fbf6e8;
   --ink: #2a2418;
   --ink-soft: #5a4f3a;
   --green: #1f4d36;
   --green-light: #2e6b4c;
+  --red: #8c2a1c;
 
   color-scheme: light;
   font-family:
@@ -13,7 +15,7 @@
     'Segoe UI',
     Roboto,
     sans-serif;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--ink);
   background: var(--parchment);
   -webkit-font-smoothing: antialiased;
@@ -31,11 +33,43 @@ body {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-family: Georgia, 'Times New Roman', serif;
   color: var(--green);
   margin: 0 0 0.5rem;
 }
+
+h3 {
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--green);
+  padding-bottom: 0.2rem;
+}
+
+h4 {
+  font-size: 0.95rem;
+  margin-top: 0.75rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+/* --- Mise en page --- */
 
 .app {
   display: flex;
@@ -46,46 +80,399 @@ h3 {
 .app-header {
   background: var(--green);
   color: var(--parchment);
-  padding: 1rem;
-  padding-top: calc(1rem + env(safe-area-inset-top));
+  padding: 0.6rem 1rem;
+  padding-top: calc(0.6rem + env(safe-area-inset-top));
 }
 
 .app-header h1 {
   color: var(--parchment);
-  font-size: 1.5rem;
-}
-
-.subtitle {
+  font-size: 1.25rem;
   margin: 0;
-  opacity: 0.9;
 }
 
 .app-main {
   flex: 1;
   width: 100%;
-  max-width: 60rem;
+  max-width: 64rem;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
 .card {
-  background: #fbf6e8;
+  background: var(--paper);
   border: 1px solid var(--parchment-dark);
-  border-top: 4px solid var(--green);
   border-radius: 6px;
-  padding: 1rem;
-}
-
-.demo strong {
-  font-size: 1.5rem;
-  color: var(--green);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .app-footer {
   padding: 1rem;
   padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--ink-soft);
   border-top: 1px solid var(--parchment-dark);
   text-align: center;
+}
+
+/* --- Boutons et formulaires --- */
+
+.primary,
+.secondary,
+.file-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.primary {
+  background: var(--green);
+  color: var(--parchment);
+  border: none;
+  width: 100%;
+}
+
+.secondary,
+.file-button {
+  background: transparent;
+  color: var(--green);
+  border: 2px solid var(--green);
+}
+
+.file-button {
+  cursor: pointer;
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.file-button input {
+  display: none;
+}
+
+.field {
+  display: block;
+  margin: 0.75rem 0;
+}
+
+.field textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85rem;
+  background: #fff;
+  border: 1px solid var(--parchment-dark);
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.error {
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* --- En-tête de fiche --- */
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.char-name {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.char-sub {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.hp-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 4rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--red);
+  color: #fff;
+  border-radius: 8px;
+}
+
+.hp-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+.hp-pill strong {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+/* --- Onglets --- */
+
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  overflow-x: auto;
+  gap: 0.25rem;
+  background: var(--parchment);
+  padding: 0.25rem 0;
+  margin-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+
+.tab {
+  flex: 1 0 auto;
+  padding: 0.5rem 0.75rem;
+  background: var(--paper);
+  color: var(--green);
+  border: 1px solid var(--parchment-dark);
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.tab.active {
+  background: var(--green);
+  color: var(--parchment);
+  border-color: var(--green);
+}
+
+.close-sheet {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* --- Statistiques --- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem;
+  border: 2px solid var(--green);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--green);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.stat-sub {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+/* --- Attaques --- */
+
+.attack {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.attack:last-child {
+  border-bottom: none;
+}
+
+.attack-name {
+  font-weight: 600;
+}
+
+.attack-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.attack-bonus {
+  font-size: 1.6rem;
+  color: var(--green);
+  min-width: 3rem;
+}
+
+/* --- Compétences --- */
+
+.skill {
+  display: grid;
+  grid-template-columns: 1fr 2.5rem 1.5rem 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.skill.untrained {
+  color: var(--ink-soft);
+}
+
+.skill-ability {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.rank {
+  font-weight: 700;
+  text-align: center;
+  color: var(--green);
+}
+
+.skill-total {
+  font-size: 1.2rem;
+  text-align: right;
+}
+
+.legend {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0.5rem 0 0;
+}
+
+/* --- Listes (dons, objets) --- */
+
+.feats li,
+.items li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.feats li:last-child,
+.items li:last-child {
+  border-bottom: none;
+}
+
+.feat-level {
+  display: inline-block;
+  min-width: 3.5rem;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.qty {
+  float: right;
+  font-weight: 700;
+}
+
+.container {
+  margin-top: 0.5rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--parchment-dark);
+}
+
+.money {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* --- Noms traduits --- */
+
+.name-en {
+  font-size: 0.8em;
+  color: var(--ink-soft);
+}
+
+.vo {
+  margin-left: 0.35em;
+  padding: 0 0.3em;
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--ink-soft);
+  border: 1px solid var(--ink-soft);
+  border-radius: 3px;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+/* --- Identité --- */
+
+.abilities {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+}
+
+.ability {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 0;
+  border: 1px solid var(--parchment-dark);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.ability.key {
+  border: 2px solid var(--green);
+}
+
+.ability-name {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.ability-mod {
+  font-size: 1.3rem;
+}
+
+.fields {
+  margin: 0;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.field-row:last-child {
+  border-bottom: none;
+}
+
+.field-row dt {
+  font-weight: 600;
+  color: var(--green);
+}
+
+.field-row dd {
+  margin: 0;
+}
+
+@media (min-width: 48rem) {
+  .tab-panel {
+    columns: 2;
+    column-gap: 0.75rem;
+  }
+
+  .tab-panel .card {
+    break-inside: avoid;
+  }
 }

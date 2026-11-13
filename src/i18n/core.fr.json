@@ -1,0 +1,84 @@
+{
+  "_note": "Termes de base. À vérifier contre les livres Black Book Éditions avant de figer.",
+  "abilities": {
+    "str": "Force",
+    "dex": "Dextérité",
+    "con": "Constitution",
+    "int": "Intelligence",
+    "wis": "Sagesse",
+    "cha": "Charisme"
+  },
+  "abilitiesShort": {
+    "str": "For",
+    "dex": "Dex",
+    "con": "Con",
+    "int": "Int",
+    "wis": "Sag",
+    "cha": "Cha"
+  },
+  "saves": {
+    "fortitude": "Vigueur",
+    "reflex": "Réflexes",
+    "will": "Volonté"
+  },
+  "skills": {
+    "acrobatics": "Acrobaties",
+    "arcana": "Arcanes",
+    "athletics": "Athlétisme",
+    "crafting": "Artisanat",
+    "deception": "Duperie",
+    "diplomacy": "Diplomatie",
+    "intimidation": "Intimidation",
+    "medicine": "Médecine",
+    "nature": "Nature",
+    "occultism": "Occultisme",
+    "performance": "Représentation",
+    "religion": "Religion",
+    "society": "Société",
+    "stealth": "Discrétion",
+    "survival": "Survie",
+    "thievery": "Vol"
+  },
+  "ranks": {
+    "untrained": "Non qualifié",
+    "trained": "Qualifié",
+    "expert": "Expert",
+    "master": "Maître",
+    "legendary": "Légendaire"
+  },
+  "featTypes": {
+    "Ancestry Feat": "Dons d'ascendance",
+    "Heritage": "Héritage",
+    "Class Feat": "Dons de classe",
+    "Skill Feat": "Dons de compétence",
+    "General Feat": "Dons généraux",
+    "Archetype Feat": "Dons d'archétype",
+    "Awarded Feat": "Dons accordés"
+  },
+  "classes": {
+    "Gunslinger": "Franc-tireur"
+  },
+  "ancestries": {
+    "Goblin": "Gobelin"
+  },
+  "backgrounds": {
+    "Hunter": "Chasseur"
+  },
+  "sizes": {
+    "Tiny": "Très petite",
+    "Small": "Petite",
+    "Medium": "Moyenne",
+    "Large": "Grande"
+  },
+  "armorCategories": {
+    "unarmored": "Sans armure",
+    "light": "Légère",
+    "medium": "Intermédiaire",
+    "heavy": "Lourde"
+  },
+  "damageTypes": {
+    "P": "perforants",
+    "S": "tranchants",
+    "B": "contondants"
+  }
+}

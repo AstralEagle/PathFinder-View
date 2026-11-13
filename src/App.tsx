@@ -1,24 +1,43 @@
-import { abilityModifier, formatModifier } from './rules/abilities.ts';
+import { useState } from 'react';
+import type { Character } from './pathbuilder/model.ts';
+import { parsePathbuilderText } from './pathbuilder/parse.ts';
+import { clearLastCharacter, loadLastCharacter, saveLastCharacter } from './storage.ts';
+import { ImportScreen } from './components/ImportScreen.tsx';
+import { Sheet } from './components/Sheet.tsx';
+
+function initialCharacter(): Character | null {
+  const raw = loadLastCharacter();
+  if (!raw) return null;
+  const result = parsePathbuilderText(raw);
+  return result.ok ? result.character : null;
+}
 
 export default function App() {
+  const [character, setCharacter] = useState<Character | null>(initialCharacter);
+
+  function onImported(c: Character, raw: string) {
+    saveLastCharacter(raw);
+    setCharacter(c);
+  }
+
+  function onClose() {
+    if (!window.confirm('Retirer ce personnage de l’appareil ?')) return;
+    clearLastCharacter();
+    setCharacter(null);
+  }
+
   return (
     <div className="app">
       <header className="app-header">
         <h1>Fiche PF2</h1>
-        <p className="subtitle">Votre personnage Pathbuilder 2e, en français</p>
       </header>
 
       <main className="app-main">
-        <section className="card">
-          <h2>En construction</h2>
-          <p>
-            L’application est en cours de mise en place. Bientôt, vous pourrez importer l’export
-            JSON de Pathbuilder et consulter votre fiche à la table.
-          </p>
-          <p className="demo">
-            Dextérité 18 → modificateur <strong>{formatModifier(abilityModifier(18))}</strong>
-          </p>
-        </section>
+        {character ? (
+          <Sheet character={character} onClose={onClose} />
+        ) : (
+          <ImportScreen onImported={onImported} />
+        )}
       </main>
 
       <footer className="app-footer">
