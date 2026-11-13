@@ -1,9 +1,9 @@
 {
-  "_comment": "Fichier de traductions du groupe. Clé = nom anglais exact (comme dans Pathbuilder), valeur = nom officiel VF (Black Book Éditions). Les clés commençant par _ sont ignorées.",
+  "_comment": "Fichier de traductions du groupe. Clé = nom anglais exact (comme dans Pathbuilder), valeur = nom officiel VF (Black Book Éditions). Les clés commençant par _ sont ignorées. Remplacer les « À COMPLÉTER » par le nom lu dans le livre BBE.",
   "Arbalest": "Arbalète lourde",
-  "Slinger's Precision": "Précision du franc-tireur",
+  "Slinger's Precision": "À COMPLÉTER",
   "Thieves' Toolkit": {
-    "name": "Outils de voleur",
+    "name": "À COMPLÉTER",
     "description": "<p>Description facultative, en HTML simple (p, strong, em, ul, li).</p>"
   }
 }
