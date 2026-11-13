@@ -35,7 +35,23 @@ Le dépôt contient un fichier [render.yaml](render.yaml) (Blueprint).
 
 ## Compléter les traductions
 
-À venir (jalon 4) : dictionnaires `src/i18n/*.fr.json` et script `npm run i18n:missing`.
+Les noms sont traduits dans cet ordre de priorité :
+
+1. **`src/i18n/names.override.fr.json`** : vos noms officiels VF (Black Book Éditions), écrits à la main. Toujours prioritaires.
+2. **`src/i18n/names.fr.json`** : noms de la traduction communautaire [Pathfinder-fr](https://github.com/pathfinder-fr/foundryvtt-pathfinder2-fr). Fichier généré, ne pas modifier à la main.
+3. Sinon, le nom anglais s'affiche avec le marqueur **VO**.
+
+Les termes de base (caractéristiques, compétences, rangs, runes…) sont dans `src/i18n/core.fr.json`.
+
+| Commande                             | Rôle                                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------ |
+| `npm run i18n:missing`               | Liste les noms sans traduction des exports de `fixtures/`                |
+| `npm run i18n:missing -- perso.json` | Même chose pour un export choisi                                         |
+| `npm run i18n:import`                | Retélécharge les noms Pathfinder-fr (noms seulement, aucune description) |
+
+Pour corriger ou compléter un nom, ajoutez une ligne `"Nom anglais": "Nom officiel"` dans `names.override.fr.json`.
+
+Les traductions Pathfinder-fr ne sont pas toutes officielles et sont réservées à un usage non commercial (OGL / Pathfinder Community Use Policy). Crédits : l'équipe et les traducteurs de Pathfinder-fr.
 
 ## Mentions
 

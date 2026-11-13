@@ -11,6 +11,8 @@ import {
   weaponAttack,
 } from '../../rules/character.ts';
 import { signed, trCore, trCoreOr } from '../../i18n/translate.ts';
+import { trName } from '../../i18n/names.ts';
+import { weaponName } from '../../i18n/itemNames.ts';
 import { Name } from '../Name.tsx';
 
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
@@ -73,7 +75,7 @@ export function CombatTab({ c }: { c: Character }) {
             return (
               <li key={`${w.name}-${i}`} className="attack">
                 <div className="attack-name">
-                  <Name en={w.display} fr={null} />
+                  <Name {...weaponName(w, trName)} />
                 </div>
                 <div className="attack-line">
                   <strong className="attack-bonus">

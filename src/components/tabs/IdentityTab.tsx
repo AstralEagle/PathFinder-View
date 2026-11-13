@@ -37,16 +37,16 @@ export function IdentityTab({ c }: { c: Character }) {
         <h3>Identité</h3>
         <dl className="fields">
           <Field label="Classe">
-            <Name en={c.className} fr={trCore('classes', c.className)} />
+            <Name en={c.className} fr={trCore('classes', c.className) ?? undefined} />
           </Field>
           <Field label="Niveau">{c.level}</Field>
           <Field label="Ascendance">
-            <Name en={c.ancestry} fr={trCore('ancestries', c.ancestry)} />
+            <Name en={c.ancestry} fr={trCore('ancestries', c.ancestry) ?? undefined} />
           </Field>
-          <Field label="Héritage">{c.heritage ? <Name en={c.heritage} fr={null} /> : EMPTY}</Field>
+          <Field label="Héritage">{c.heritage ? <Name en={c.heritage} /> : EMPTY}</Field>
           <Field label="Historique">
             {c.background ? (
-              <Name en={c.background} fr={trCore('backgrounds', c.background)} />
+              <Name en={c.background} fr={trCore('backgrounds', c.background) ?? undefined} />
             ) : (
               EMPTY
             )}
@@ -58,7 +58,7 @@ export function IdentityTab({ c }: { c: Character }) {
               : c.languages.map((l, i) => (
                   <span key={l}>
                     {i > 0 && ', '}
-                    <Name en={l} fr={null} />
+                    <Name en={l} />
                   </span>
                 ))}
           </Field>

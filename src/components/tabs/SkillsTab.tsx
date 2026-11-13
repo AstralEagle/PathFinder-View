@@ -40,7 +40,7 @@ export function SkillsTab({ c }: { c: Character }) {
               key={`lore-${l.name}`}
               label={
                 <>
-                  Connaissance (<Name en={l.name} fr={null} />)
+                  Connaissance (<Name en={l.name} />)
                 </>
               }
               check={check}

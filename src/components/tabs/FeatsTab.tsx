@@ -38,7 +38,7 @@ export function FeatsTab({ c }: { c: Character }) {
             {feats.map((f, i) => (
               <li key={`${f.name}-${i}`}>
                 <span className="feat-level">niv. {f.level}</span>
-                <Name en={f.name} fr={null} />
+                <Name en={f.name} />
                 {f.choice && <span className="muted"> : {f.choice}</span>}
               </li>
             ))}
@@ -52,7 +52,7 @@ export function FeatsTab({ c }: { c: Character }) {
         <ul className="feats">
           {c.specials.map((s) => (
             <li key={s}>
-              <Name en={s} fr={null} />
+              <Name en={s} />
             </li>
           ))}
         </ul>

@@ -15,7 +15,9 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "i18n:import": "node scripts/import-pf2fr.mjs",
+    "i18n:missing": "node scripts/i18n-missing.ts"
   },
   "dependencies": {
     "react": "^19.3.1",

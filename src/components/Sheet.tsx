@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Character } from '../pathbuilder/model.ts';
 import { maxHp } from '../rules/character.ts';
 import { trCore } from '../i18n/translate.ts';
+import { trName } from '../i18n/names.ts';
 import { CombatTab } from './tabs/CombatTab.tsx';
 import { SkillsTab } from './tabs/SkillsTab.tsx';
 import { FeatsTab } from './tabs/FeatsTab.tsx';
@@ -28,8 +29,8 @@ export function Sheet({ character: c, onClose }: Props) {
     { key: 'identity', label: 'Identité' },
   ];
 
-  const className = trCore('classes', c.className) ?? c.className;
-  const ancestry = trCore('ancestries', c.ancestry) ?? c.ancestry;
+  const className = trCore('classes', c.className) ?? trName(c.className) ?? c.className;
+  const ancestry = trCore('ancestries', c.ancestry) ?? trName(c.ancestry) ?? c.ancestry;
 
   return (
     <div className="sheet">

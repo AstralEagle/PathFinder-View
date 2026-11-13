@@ -1,5 +1,7 @@
 import type { Character, EquipmentItem } from '../../pathbuilder/model.ts';
 import { trCoreOr } from '../../i18n/translate.ts';
+import { trName } from '../../i18n/names.ts';
+import { armorName, weaponName } from '../../i18n/itemNames.ts';
 import { Name } from '../Name.tsx';
 
 function ItemList({ items }: { items: EquipmentItem[] }) {
@@ -7,7 +9,7 @@ function ItemList({ items }: { items: EquipmentItem[] }) {
     <ul className="items">
       {items.map((e, i) => (
         <li key={`${e.name}-${i}`}>
-          <Name en={e.name} fr={null} />
+          <Name en={e.name} />
           {e.qty !== 1 && <span className="qty">× {e.qty}</span>}
         </li>
       ))}
@@ -37,7 +39,7 @@ export function InventoryTab({ c }: { c: Character }) {
         <ul className="items">
           {c.weapons.map((w, i) => (
             <li key={`${w.name}-${i}`}>
-              <Name en={w.display} fr={null} />
+              <Name {...weaponName(w, trName)} />
               {w.qty !== 1 && <span className="qty">× {w.qty}</span>}
             </li>
           ))}
@@ -50,7 +52,7 @@ export function InventoryTab({ c }: { c: Character }) {
         <ul className="items">
           {c.armor.map((a, i) => (
             <li key={`${a.name}-${i}`}>
-              <Name en={a.display} fr={null} />
+              <Name {...armorName(a, trName)} />
               <span className="muted">
                 {' '}
                 · {trCoreOr('armorCategories', a.prof)}
@@ -70,7 +72,7 @@ export function InventoryTab({ c }: { c: Character }) {
           return (
             <div key={ct.id} className="container">
               <h4>
-                <Name en={ct.name} fr={null} />
+                <Name en={ct.name} />
               </h4>
               {inside.length === 0 ? <p className="muted">Vide.</p> : <ItemList items={inside} />}
             </div>

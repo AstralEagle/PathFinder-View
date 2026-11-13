@@ -76,6 +76,14 @@
     "medium": "Intermédiaire",
     "heavy": "Lourde"
   },
+  "fundamentalRunes": {
+    "striking": "de frappe",
+    "greaterStriking": "de frappe supérieure",
+    "majorStriking": "de frappe majeure",
+    "resilient": "de résilience",
+    "greaterResilient": "de résilience supérieure",
+    "majorResilient": "de résilience majeure"
+  },
   "damageTypes": {
     "P": "perforants",
     "S": "tranchants",
