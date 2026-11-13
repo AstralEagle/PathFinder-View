@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { usePublishHeight } from './usePublishHeight.ts';
 import { applyDamage, applyHealing, setTempHp, type GameState } from '../game/state.ts';
 
 interface Props {
@@ -13,20 +14,8 @@ export function HpBar({ state, max, onChange }: Props) {
   const barRef = useRef<HTMLDivElement>(null);
   const { current, temp } = state.hp;
 
-  // Publie la hauteur réelle de la barre (--hp-bar-h) : la page réserve exactement cet espace.
-  useLayoutEffect(() => {
-    const el = barRef.current;
-    if (!el) return;
-    const root = document.documentElement;
-    const publish = () => root.style.setProperty('--hp-bar-h', `${el.offsetHeight}px`);
-    publish();
-    const observer = new ResizeObserver(publish);
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      root.style.removeProperty('--hp-bar-h');
-    };
-  }, []);
+  // Hauteur réelle de la barre (--hp-bar-h) : la page réserve exactement cet espace.
+  usePublishHeight(barRef, '--hp-bar-h');
   const ratio = max > 0 ? Math.min(1, current / max) : 0;
   const value = Number.parseInt(amount, 10);
   const valid = Number.isFinite(value) && value > 0;

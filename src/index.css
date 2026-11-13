@@ -266,9 +266,16 @@ button {
   display: none;
 }
 
+/* Titre de la section en cours : collé sous l'en-tête, il ne défile pas. */
 .mobile-tab-title {
+  position: sticky;
+  top: var(--header-h, 3.5rem);
+  z-index: 4;
   font-size: 1.1rem;
-  margin: 0.25rem 0 0.5rem;
+  margin: 0 -0.75rem 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--parchment);
+  border-bottom: 1px solid var(--parchment-dark);
 }
 
 @media (min-width: 48rem) {
@@ -283,7 +290,7 @@ button {
 
 .tabs {
   position: sticky;
-  top: 3.5rem;
+  top: var(--header-h, 3.5rem);
   z-index: 1;
   overflow-x: auto;
   gap: 0.25rem;

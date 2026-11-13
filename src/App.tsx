@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Character } from './pathbuilder/model.ts';
 import { parsePathbuilderText } from './pathbuilder/parse.ts';
 import type { GameState } from './game/state.ts';
@@ -21,6 +21,7 @@ import { sheetTabs, type TabKey } from './components/sheetTabs.ts';
 import { DetailDialog } from './components/DetailDialog.tsx';
 import { AboutDialog } from './components/AboutDialog.tsx';
 import { CharacterTitle } from './components/CharacterTitle.tsx';
+import { usePublishHeight } from './components/usePublishHeight.ts';
 import { DetailContext, type DetailRequest } from './details/DetailContext.ts';
 import { TranslationContext } from './sources/TranslationContext.ts';
 import { useTranslationState } from './sources/useTranslationState.ts';
@@ -39,6 +40,9 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  // Hauteur réelle de l'en-tête (--header-h) : les éléments collants se placent juste dessous.
+  const headerRef = useRef<HTMLElement>(null);
+  usePublishHeight(headerRef, '--header-h');
   const [detail, setDetail] = useState<DetailRequest | null>(null);
   const { translation, groupStatus, reloadGroup, local, clearLocal } = useTranslationState(
     settings.groupUrl,
@@ -99,7 +103,7 @@ export default function App() {
       <TranslationContext.Provider value={translation}>
         <DetailContext.Provider value={setDetail}>
           <div className={view.screen === 'sheet' ? 'app with-hp-bar' : 'app'}>
-            <header className="app-header">
+            <header className="app-header" ref={headerRef}>
               {view.screen === 'sheet' && openCharacter ? (
                 <CharacterTitle c={openCharacter} />
               ) : (
