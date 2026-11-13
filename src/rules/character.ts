@@ -55,6 +55,32 @@ function check(c: Character, ability: AbilityKey, value: ProficiencyValue, other
   };
 }
 
+/** Détail d'un test : modificateur de caractéristique, maîtrise (valeur + niveau), autres. */
+export interface CheckBreakdown {
+  abilityMod: number;
+  /** Valeur de rang (0, 2, 4, 6, 8). */
+  rankValue: ProficiencyValue;
+  /** Niveau ajouté (0 si non qualifié). */
+  levelBonus: number;
+  proficiencyBonus: number;
+  /** Malus d'armure et autres ajustements. */
+  other: number;
+  total: number;
+}
+
+export function checkBreakdown(c: Character, check: Check): CheckBreakdown {
+  const abilityMod = mod(c, check.ability);
+  const prof = proficiencyBonus(check.proficiency, c.level);
+  return {
+    abilityMod,
+    rankValue: check.proficiency,
+    levelBonus: check.proficiency === 0 ? 0 : c.level,
+    proficiencyBonus: prof,
+    other: check.total - abilityMod - prof,
+    total: check.total,
+  };
+}
+
 export function maxHp(c: Character): number {
   const a = c.attributes;
   return a.ancestryHp + (a.classHp + mod(c, 'con') + a.bonusHpPerLevel) * c.level + a.bonusHp;

@@ -3,6 +3,7 @@ import flacon from '../../fixtures/flacon.json';
 import { parsePathbuilder } from '../pathbuilder/parse.ts';
 import {
   armorClass,
+  checkBreakdown,
   classDC,
   damageFormula,
   lore,
@@ -71,6 +72,23 @@ describe('Flacon, niveau 4', () => {
     const a = weaponAttack(c.weapons[1]!);
     expect(a.attack).toBe(10);
     expect(damageFormula(a)).toBe('1d4+2 P');
+  });
+});
+
+describe('checkBreakdown', () => {
+  it('Discrétion experte : Dex +4, maîtrise 4 + niveau 4', () => {
+    expect(checkBreakdown(c, skill(c, 'stealth'))).toEqual({
+      abilityMod: 4,
+      rankValue: 4,
+      levelBonus: 4,
+      proficiencyBonus: 8,
+      other: 0,
+      total: 12,
+    });
+  });
+  it('non qualifié : pas de niveau ; le malus d’armure apparaît dans « autres »', () => {
+    expect(checkBreakdown(c, skill(c, 'nature'))).toMatchObject({ levelBonus: 0, total: -1 });
+    expect(checkBreakdown(c, skill(c, 'acrobatics', -1)).other).toBe(-1);
   });
 });
 

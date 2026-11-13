@@ -389,6 +389,75 @@ button {
   border-bottom: 1px solid var(--parchment-dark);
 }
 
+/* La ligne de compétence est un bouton : on retire son apparence de bouton. */
+button.skill {
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+button.skill:hover,
+button.skill:focus-visible {
+  background: var(--parchment);
+}
+
+.scroll-list li:last-child button.skill {
+  border-bottom: none;
+}
+
+.skill-total-big {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.skill-total-big strong {
+  font-size: 2.2rem;
+  color: var(--green);
+}
+
+.breakdown {
+  margin: 0 0 0.35rem;
+}
+
+.breakdown div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px dashed var(--parchment-dark);
+}
+
+.breakdown dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.breakdown .breakdown-total {
+  border-bottom: none;
+  border-top: 2px solid var(--green);
+  font-size: 1.1rem;
+}
+
+.skill-actions li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.skill-actions li.locked {
+  opacity: 0.6;
+}
+
 .skill.untrained {
   color: var(--ink-soft);
 }
@@ -420,10 +489,6 @@ button {
   scrollbar-width: thin;
   scrollbar-color: var(--parchment-dark) transparent;
   border-bottom: 1px solid var(--parchment-dark);
-}
-
-.scroll-list .skill:last-child {
-  border-bottom: none;
 }
 
 .skills-card {

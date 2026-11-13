@@ -4,6 +4,8 @@ import { lore, skill, SKILLS, type Check } from '../../rules/character.ts';
 import { signed, trCoreOr } from '../../i18n/translate.ts';
 import { useTr } from '../../sources/TranslationContext.ts';
 import { useFitHeight } from '../useFitHeight.ts';
+import { SkillDialog } from '../SkillDialog.tsx';
+import { LORE_ACTIONS, SKILL_ACTIONS, type SkillAction } from '../../game/skillActions.ts';
 
 const RANK_LETTER: Record<Check['rank'], string> = {
   untrained: '–',
@@ -29,23 +31,30 @@ interface SkillRow {
   fr: string;
   en: string;
   check: Check;
+  actions: SkillAction[];
 }
 
 const capitalize = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
-function Row({ row, showEn }: { row: SkillRow; showEn: boolean }) {
+function Row({ row, showEn, onOpen }: { row: SkillRow; showEn: boolean; onOpen: () => void }) {
   const { check } = row;
   return (
-    <li className={check.proficiency === 0 ? 'skill untrained' : 'skill'}>
-      <span className="skill-name" title={`${row.fr} (${row.en})`}>
-        {row.fr}
-        {showEn && <span className="name-en"> ({row.en})</span>}
-      </span>
-      <span className="skill-ability">{trCoreOr('abilitiesShort', check.ability)}</span>
-      <span className="rank" title={trCoreOr('ranks', check.rank)}>
-        {RANK_LETTER[check.rank]}
-      </span>
-      <strong className="skill-total">{signed(check.total)}</strong>
+    <li>
+      <button
+        type="button"
+        className={check.proficiency === 0 ? 'skill untrained' : 'skill'}
+        onClick={onOpen}
+      >
+        <span className="skill-name" title={`${row.fr} (${row.en})`}>
+          {row.fr}
+          {showEn && <span className="name-en"> ({row.en})</span>}
+        </span>
+        <span className="skill-ability">{trCoreOr('abilitiesShort', check.ability)}</span>
+        <span className="rank" title={trCoreOr('ranks', check.rank)}>
+          {RANK_LETTER[check.rank]}
+        </span>
+        <strong className="skill-total">{signed(check.total)}</strong>
+      </button>
     </li>
   );
 }
@@ -64,6 +73,7 @@ export function SkillsTab({ c }: { c: Character }) {
         fr: trCoreOr('skills', s.key),
         en: capitalize(s.key),
         check: skill(c, s.key),
+        actions: SKILL_ACTIONS[s.key],
       })),
       ...c.lores.flatMap((l) => {
         const check = lore(c, l.name);
@@ -74,6 +84,7 @@ export function SkillsTab({ c }: { c: Character }) {
                 fr: `Connaissance (${tr(l.name) ?? l.name})`,
                 en: `${l.name} Lore`,
                 check,
+                actions: LORE_ACTIONS,
               },
             ]
           : [];
@@ -82,6 +93,9 @@ export function SkillsTab({ c }: { c: Character }) {
     const locale = sortBy === 'fr' ? 'fr' : 'en';
     return list.sort((a, b) => a[sortBy].localeCompare(b[sortBy], locale, { sensitivity: 'base' }));
   }, [c, tr, sortBy]);
+
+  const [openId, setOpenId] = useState<string | null>(null);
+  const opened = rows.find((r) => r.id === openId);
 
   function changeSort(next: SortBy) {
     setSortBy(next);
@@ -112,10 +126,23 @@ export function SkillsTab({ c }: { c: Character }) {
       </div>
       <ul className="skills scroll-list" ref={listRef} style={{ maxHeight }}>
         {rows.map((r) => (
-          <Row key={r.id} row={r} showEn={sortBy === 'en'} />
+          <Row key={r.id} row={r} showEn={sortBy === 'en'} onOpen={() => setOpenId(r.id)} />
         ))}
       </ul>
-      <p className="legend">Q qualifié · E expert · M maître · L légendaire</p>
+      <p className="legend">
+        Q qualifié · E expert · M maître · L légendaire · touchez pour le détail
+      </p>
+
+      {opened && (
+        <SkillDialog
+          c={c}
+          title={opened.fr}
+          en={opened.en}
+          check={opened.check}
+          actions={opened.actions}
+          onClose={() => setOpenId(null)}
+        />
+      )}
     </section>
   );
 }

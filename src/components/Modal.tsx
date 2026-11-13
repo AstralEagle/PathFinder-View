@@ -8,8 +8,11 @@ interface Props {
   children: ReactNode;
 }
 
-/** Nombre de fenêtres ouvertes : le défilement de la page reste bloqué tant qu'il en reste une. */
-let openModals = 0;
+/**
+ * Pile des fenêtres ouvertes : le défilement de la page reste bloqué tant qu'il en reste une,
+ * et Échap ne ferme que celle du dessus.
+ */
+const stack: object[] = [];
 
 /** Fenêtre par-dessus la page : se ferme avec Échap, la croix ou un toucher sur le fond. */
 export function Modal({ title, onClose, variant = 'dialog', children }: Props) {
@@ -24,16 +27,17 @@ export function Modal({ title, onClose, variant = 'dialog', children }: Props) {
     const previous = document.activeElement as HTMLElement | null;
     const node = panel.current;
     node?.focus();
+    const self = {};
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeRef.current();
+      if (e.key === 'Escape' && stack[stack.length - 1] === self) closeRef.current();
     };
     document.addEventListener('keydown', onKey);
-    openModals++;
+    stack.push(self);
     document.body.classList.add('no-scroll');
     return () => {
       document.removeEventListener('keydown', onKey);
-      openModals--;
-      if (openModals === 0) document.body.classList.remove('no-scroll');
+      stack.splice(stack.indexOf(self), 1);
+      if (stack.length === 0) document.body.classList.remove('no-scroll');
       // Ne rend le focus que s'il était dans cette fenêtre (pas si une autre fenêtre vient de s'ouvrir).
       const active = document.activeElement;
       if (!active || active === document.body || node?.contains(active)) previous?.focus();
