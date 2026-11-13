@@ -2,15 +2,12 @@ import { useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import { Modal } from './Modal.tsx';
 import { cleanEnrichers } from '../details/enrichers.ts';
-import { findDetail, type DetailEntry } from '../details/packs.ts';
 import type { DetailRequest } from '../details/DetailContext.ts';
-import { trName } from '../i18n/names.ts';
+import { resolveDetail, SOURCE_LABELS, nameSource, type ResolvedDetail } from '../sources/chain.ts';
+import { traitFr } from '../sources/langFr.ts';
+import { useTranslation } from '../sources/TranslationContext.ts';
 
-type Status =
-  | { kind: 'loading' }
-  | { kind: 'found'; entry: DetailEntry; html: string }
-  | { kind: 'missing' }
-  | { kind: 'error' };
+type Status = { kind: 'loading' } | { kind: 'done'; detail: ResolvedDetail } | { kind: 'error' };
 
 const ALLOWED_TAGS = [
   'p',
@@ -41,25 +38,58 @@ function toSafeHtml(raw: string): string {
   return DOMPurify.sanitize(cleanEnrichers(raw), { ALLOWED_TAGS, ALLOWED_ATTR: [] });
 }
 
+const ACTIONS: Record<string, string> = {
+  reaction: 'Réaction',
+  free: 'Action gratuite',
+  passive: 'Passif',
+};
+
+function actionLabel(type: string | null, count: number | null): string | null {
+  if (type === 'action' && count) return count === 1 ? '1 action' : `${count} actions`;
+  return type ? (ACTIONS[type] ?? null) : null;
+}
+
+/** Saisie d'une traduction locale pour un nom qui n'en a pas (source n°3). */
+function LocalNameForm({ en, onSave }: { en: string; onSave: (fr: string) => void }) {
+  const [value, setValue] = useState('');
+  return (
+    <form
+      className="local-name"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (value.trim()) onSave(value.trim());
+      }}
+    >
+      <label>
+        <span>Ajouter une traduction pour « {en} » :</span>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Nom en français"
+        />
+      </label>
+      <button type="submit" className="secondary" disabled={!value.trim()}>
+        Enregistrer
+      </button>
+    </form>
+  );
+}
+
 interface Props {
   request: DetailRequest;
   onClose: () => void;
 }
 
 export function DetailDialog({ request, onClose }: Props) {
+  const { tr, sources, group, lang, setLocalName } = useTranslation();
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    findDetail(request.kind, request.en).then(
-      (entry) => {
-        if (cancelled) return;
-        setStatus(
-          entry
-            ? { kind: 'found', entry, html: toSafeHtml(entry.description) }
-            : { kind: 'missing' },
-        );
+    resolveDetail(request.kind, request.en, group).then(
+      (detail) => {
+        if (!cancelled) setStatus({ kind: 'done', detail });
       },
       () => {
         if (!cancelled) setStatus({ kind: 'error' });
@@ -68,92 +98,129 @@ export function DetailDialog({ request, onClose }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [request.kind, request.en, attempt]);
+  }, [request.kind, request.en, group, attempt]);
 
-  const fr = request.label ?? trName(request.en) ?? request.en;
+  const translated = tr(request.en);
+  const title = request.label ?? translated ?? request.en;
+  const nameFrom = nameSource(sources, request.en);
   const aon = `https://2e.aonprd.com/Search.aspx?q=${encodeURIComponent(request.en)}`;
 
+  const d = status.kind === 'done' ? status.detail : null;
+  const meta = d?.meta;
+  const action = meta ? actionLabel(meta.actionType, meta.actions) : null;
+  const traits = meta
+    ? [...(meta.rarity ? [meta.rarity] : []), ...meta.traits].map((t) =>
+        lang ? (traitFr(lang, t) ?? t) : t,
+      )
+    : [];
+
   return (
-    <Modal title={fr} onClose={onClose}>
-      {fr !== request.en && <p className="detail-en">{request.en}</p>}
+    <Modal title={title} onClose={onClose}>
+      {title !== request.en && <p className="detail-en">{request.en}</p>}
+
+      {!translated && (
+        <LocalNameForm en={request.en} onSave={(fr) => setLocalName(request.en, fr)} />
+      )}
 
       {status.kind === 'loading' && (
         <p className="muted" role="status">
-          Chargement de la description… (la première fois, cela peut prendre quelques secondes)
+          Chargement… (la première fois, cela peut prendre quelques secondes)
         </p>
       )}
 
       {status.kind === 'error' && (
-        <div role="alert">
-          <p className="error">Impossible de charger la description. Êtes-vous hors connexion ?</p>
-          <button
-            type="button"
-            className="secondary full"
-            onClick={() => {
-              setStatus({ kind: 'loading' });
-              setAttempt((n) => n + 1);
-            }}
-          >
-            Réessayer
-          </button>
-        </div>
+        <p className="error" role="alert">
+          Impossible de charger les informations.
+        </p>
       )}
 
-      {status.kind === 'missing' && (
-        <p className="muted">Aucune description trouvée pour cet élément dans Pathfinder-fr.</p>
-      )}
-
-      {status.kind === 'found' && (
+      {d && (
         <>
-          {(status.entry.prereq.length > 0 ||
-            status.entry.range ||
-            status.entry.target ||
-            status.entry.area) && (
+          {(meta?.level != null || action || traits.length > 0) && (
+            <div className="detail-tags">
+              {meta?.level != null && <span className="tag level">Niveau {meta.level}</span>}
+              {action && <span className="tag action">{action}</span>}
+              {traits.map((t) => (
+                <span key={t} className="tag">
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {(d.prereq || d.spell) && (
             <dl className="detail-meta">
-              {status.entry.prereq.length > 0 && (
+              {d.prereq && (
                 <div>
                   <dt>Prérequis</dt>
-                  <dd>{status.entry.prereq.join(' ; ')}</dd>
+                  <dd lang={d.prereq.lang}>{d.prereq.values.join(' ; ')}</dd>
                 </div>
               )}
-              {status.entry.range && (
+              {d.spell?.range && (
                 <div>
                   <dt>Portée</dt>
-                  <dd>{status.entry.range}</dd>
+                  <dd>{d.spell.range}</dd>
                 </div>
               )}
-              {status.entry.area && (
+              {d.spell?.area && (
                 <div>
                   <dt>Zone</dt>
-                  <dd>{status.entry.area}</dd>
+                  <dd>{d.spell.area}</dd>
                 </div>
               )}
-              {status.entry.target && (
+              {d.spell?.target && (
                 <div>
                   <dt>Cibles</dt>
-                  <dd>{status.entry.target}</dd>
+                  <dd>{d.spell.target}</dd>
                 </div>
               )}
             </dl>
           )}
-          {status.html ? (
-            <div className="detail-body" dangerouslySetInnerHTML={{ __html: status.html }} />
+
+          {d.description ? (
+            <>
+              {d.description.lang === 'en' && (
+                <p className="detail-notice">
+                  Pas de description française : texte officiel en anglais.
+                </p>
+              )}
+              <div
+                className="detail-body"
+                lang={d.description.lang}
+                dangerouslySetInnerHTML={{ __html: toSafeHtml(d.description.html) }}
+              />
+            </>
           ) : (
-            <p className="muted">Pas de description.</p>
+            <p className="muted">Aucune description trouvée dans les sources.</p>
+          )}
+
+          {d.failed.length > 0 && (
+            <div className="detail-notice" role="alert">
+              <p>
+                Source{d.failed.length > 1 ? 's' : ''} injoignable
+                {d.failed.length > 1 ? 's' : ''} :{' '}
+                {d.failed.map((s) => SOURCE_LABELS[s]).join(', ')}. Êtes-vous hors connexion ?
+              </p>
+              <button
+                type="button"
+                className="secondary full"
+                onClick={() => {
+                  setStatus({ kind: 'loading' });
+                  setAttempt((n) => n + 1);
+                }}
+              >
+                Réessayer
+              </button>
+            </div>
           )}
         </>
       )}
 
       <p className="detail-source">
-        Source : traduction communautaire{' '}
-        <a
-          href="https://github.com/pathfinder-fr/foundryvtt-pathfinder2-fr"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Pathfinder-fr
-        </a>{' '}
-        (non officielle). Version anglaise :{' '}
+        {nameFrom && <>Nom : {SOURCE_LABELS[nameFrom]}. </>}
+        {d?.description && <>Description : {SOURCE_LABELS[d.description.source]}. </>}
+        {meta && <>Niveau et traits : {SOURCE_LABELS.foundry}. </>}
+        Voir aussi{' '}
         <a href={aon} target="_blank" rel="noreferrer">
           Archives of Nethys
         </a>

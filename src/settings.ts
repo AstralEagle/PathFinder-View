@@ -7,11 +7,14 @@ export type NameDisplay = 'both' | 'fr' | 'en';
 export interface Settings {
   distanceUnit: DistanceUnit;
   nameDisplay: NameDisplay;
+  /** Adresse du fichier de traductions du groupe (source n°1), ou chaîne vide. */
+  groupUrl: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   distanceUnit: 'ft',
   nameDisplay: 'both',
+  groupUrl: '',
 };
 
 const KEY = 'pf2.settings';
@@ -25,6 +28,7 @@ export function loadSettings(): Settings {
     return {
       distanceUnit: s.distanceUnit === 'm' ? 'm' : 'ft',
       nameDisplay: s.nameDisplay === 'fr' || s.nameDisplay === 'en' ? s.nameDisplay : 'both',
+      groupUrl: typeof s.groupUrl === 'string' ? s.groupUrl.trim() : '',
     };
   } catch {
     return DEFAULT_SETTINGS;

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { Settings } from '../settings.ts';
-import { clearDetailsCache } from '../details/packs.ts';
+import type { Dictionary } from '../i18n/lookup.ts';
+import { clearSourcesCache } from '../sources/cache.ts';
+import type { GroupStatus } from '../sources/useTranslationState.ts';
 import { Modal } from './Modal.tsx';
 
 interface Props {
@@ -9,7 +11,35 @@ interface Props {
   /** Personnage ouvert, s'il y en a un. */
   characterName: string | null;
   onChangeCharacter: () => void;
+  groupStatus: GroupStatus;
+  onReloadGroup: () => void;
+  localNames: Dictionary;
+  onClearLocal: () => void;
   onClose: () => void;
+}
+
+function GroupBadge({ status }: { status: GroupStatus }) {
+  switch (status.state) {
+    case 'none':
+      return <span className="badge">non configuré</span>;
+    case 'loading':
+      return <span className="badge">chargement…</span>;
+    case 'ok':
+      return (
+        <span
+          className="badge ok"
+          title={`Mis à jour le ${new Date(status.fetchedAt).toLocaleString('fr-FR')}`}
+        >
+          {status.count} nom(s)
+        </span>
+      );
+    case 'error':
+      return (
+        <span className="badge error" title={status.message}>
+          injoignable{status.cachedCount ? ` (copie locale : ${status.cachedCount})` : ''}
+        </span>
+      );
+  }
 }
 
 interface Option<T extends string> {
@@ -58,9 +88,14 @@ export function SettingsDialog({
   onChange,
   characterName,
   onChangeCharacter,
+  groupStatus,
+  onReloadGroup,
+  localNames,
+  onClearLocal,
   onClose,
 }: Props) {
   const [cacheCleared, setCacheCleared] = useState(false);
+  const [urlDraft, setUrlDraft] = useState(settings.groupUrl);
 
   return (
     <Modal title="Paramètres" onClose={onClose}>
@@ -107,21 +142,95 @@ export function SettingsDialog({
       </fieldset>
 
       <fieldset className="setting">
-        <legend>Descriptions</legend>
-        <p className="muted">
-          Les descriptions viennent de Pathfinder-fr et sont gardées en cache pour le hors-ligne.
-          Videz le cache pour récupérer les dernières traductions.
-        </p>
+        <legend>Sources de traduction</legend>
+        <ol className="source-list">
+          <li>
+            <strong>Fichier du groupe</strong> : noms officiels BBE{' '}
+            <GroupBadge status={groupStatus} />
+          </li>
+          <li>
+            <strong>Pathfinder-fr</strong> (module Foundry pf2-fr) : noms et descriptions
+          </li>
+          <li>
+            <strong>Saisie locale</strong> : {Object.keys(localNames).length} traduction(s) sur cet
+            appareil
+          </li>
+          <li>
+            <strong>Pathfinder-fr</strong> (module Foundry lang-fr) : traits, langues, états
+          </li>
+          <li>
+            <strong>Foundry pf2e</strong> : texte officiel anglais, niveau, traits
+          </li>
+        </ol>
+
+        <form
+          className="url-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onChange({ ...settings, groupUrl: urlDraft.trim() });
+          }}
+        >
+          <label>
+            <span>Adresse du fichier du groupe (Gist GitHub ou autre JSON)</span>
+            <input
+              type="url"
+              inputMode="url"
+              placeholder="https://gist.github.com/…"
+              value={urlDraft}
+              onChange={(e) => setUrlDraft(e.target.value)}
+            />
+          </label>
+          <div className="actions">
+            <button
+              type="button"
+              className="secondary"
+              disabled={!settings.groupUrl || groupStatus.state === 'loading'}
+              onClick={onReloadGroup}
+            >
+              Recharger
+            </button>
+            <button
+              type="submit"
+              className="primary"
+              disabled={urlDraft.trim() === settings.groupUrl}
+            >
+              Enregistrer l’adresse
+            </button>
+          </div>
+        </form>
+
+        {Object.keys(localNames).length > 0 && (
+          <details className="local-export">
+            <summary>Voir mes traductions locales (à copier dans le fichier du groupe)</summary>
+            <textarea readOnly rows={6} value={JSON.stringify(localNames, null, 2)} />
+            <button
+              type="button"
+              className="secondary full"
+              onClick={() => {
+                if (window.confirm('Effacer toutes les traductions saisies sur cet appareil ?')) {
+                  onClearLocal();
+                }
+              }}
+            >
+              Effacer mes traductions locales
+            </button>
+          </details>
+        )}
+
         <button
           type="button"
           className="secondary full"
           disabled={cacheCleared}
           onClick={() => {
-            void clearDetailsCache().then(() => setCacheCleared(true));
+            void clearSourcesCache().then(() => setCacheCleared(true));
           }}
         >
-          {cacheCleared ? 'Cache vidé' : 'Vider le cache des descriptions'}
+          {cacheCleared ? 'Cache vidé' : 'Vider le cache des sources'}
         </button>
+        <p className="legend">
+          Les sources téléchargées sont gardées sur l’appareil pour le hors-ligne. Videz le cache
+          pour récupérer leurs dernières versions.
+        </p>
       </fieldset>
 
       <p className="legend">Les paramètres sont enregistrés sur cet appareil.</p>

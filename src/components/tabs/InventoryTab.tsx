@@ -1,7 +1,7 @@
 import type { Character, EquipmentItem } from '../../pathbuilder/model.ts';
 import { adjustConsumable, isConsumable, type GameState } from '../../game/state.ts';
 import { trCoreOr } from '../../i18n/translate.ts';
-import { trName } from '../../i18n/names.ts';
+import { useTr } from '../../sources/TranslationContext.ts';
 import { armorName, weaponName } from '../../i18n/itemNames.ts';
 import { Name } from '../Name.tsx';
 import { Stepper } from '../Stepper.tsx';
@@ -13,6 +13,7 @@ interface Props {
 }
 
 function ItemList({ items, state, onChange }: Omit<Props, 'c'> & { items: EquipmentItem[] }) {
+  const trName = useTr();
   return (
     <ul className="items">
       {items.map((e, i) => {
@@ -37,6 +38,7 @@ function ItemList({ items, state, onChange }: Omit<Props, 'c'> & { items: Equipm
 }
 
 export function InventoryTab({ c, state, onChange }: Props) {
+  const trName = useTr();
   const loose = c.equipment.filter((e) => e.containerId === null);
   const m = c.money;
 

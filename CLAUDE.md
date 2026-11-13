@@ -23,6 +23,7 @@ Le document de référence complet est [CADRAGE.md](CADRAGE.md) : périmètre V1
 - `src/pathbuilder/` : types et parseur défensif du JSON Pathbuilder (renvoie un modèle `Character` normalisé).
 - `src/rules/` : calculs purs (modificateurs, maîtrise, PV, CA, sauvegardes, compétences, attaques).
 - `src/i18n/` : termes de base, dictionnaire des noms embarqué (hors-ligne), surcharge BBE.
+- `src/sources/` : chaîne des sources de traduction, dans l'ordre : 1. fichier du groupe (URL, Gist) + `names.override.fr.json`, 2. Pathfinder-fr module Foundry `pf2-fr`, 3. saisie locale, 4. Pathfinder-fr module Foundry `lang-fr` (traits, langues), 5. Foundry pf2e anglais officiel (description, niveau, traits). Cache commun dans `cache.ts`.
 - `src/details/` : descriptions détaillées récupérées à la demande depuis Pathfinder-fr (raw.githubusercontent.com), mises en cache (Cache Storage) ; nettoyage des balises Foundry (`enrichers.ts`). Toujours passer le HTML par DOMPurify avant affichage.
 - `fixtures/` : exports Pathbuilder réels utilisés par les tests (`flacon.json`).
 

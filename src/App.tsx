@@ -20,6 +20,8 @@ import { SettingsDialog } from './components/SettingsDialog.tsx';
 import { sheetTabs, type TabKey } from './components/sheetTabs.ts';
 import { DetailDialog } from './components/DetailDialog.tsx';
 import { DetailContext, type DetailRequest } from './details/DetailContext.ts';
+import { TranslationContext } from './sources/TranslationContext.ts';
+import { useTranslationState } from './sources/useTranslationState.ts';
 
 type View = { screen: 'home' } | { screen: 'import' } | { screen: 'sheet'; id: string };
 
@@ -35,6 +37,9 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detail, setDetail] = useState<DetailRequest | null>(null);
+  const { translation, groupStatus, reloadGroup, local, clearLocal } = useTranslationState(
+    settings.groupUrl,
+  );
 
   // Sauvegarde automatique à chaque modification.
   useEffect(() => saveStore(store), [store]);
@@ -88,94 +93,103 @@ export default function App() {
 
   return (
     <SettingsContext.Provider value={settings}>
-      <DetailContext.Provider value={setDetail}>
-        <div className={view.screen === 'sheet' ? 'app with-hp-bar' : 'app'}>
-          <header className="app-header">
-            <h1>Fiche PF2</h1>
-            <button
-              type="button"
-              className="burger"
-              aria-label="Ouvrir le menu"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(true)}
-            >
-              <span />
-              <span />
-              <span />
-            </button>
-          </header>
+      <TranslationContext.Provider value={translation}>
+        <DetailContext.Provider value={setDetail}>
+          <div className={view.screen === 'sheet' ? 'app with-hp-bar' : 'app'}>
+            <header className="app-header">
+              <h1>Fiche PF2</h1>
+              <button
+                type="button"
+                className="burger"
+                aria-label="Ouvrir le menu"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen(true)}
+              >
+                <span />
+                <span />
+                <span />
+              </button>
+            </header>
 
-          <main className="app-main">
-            {view.screen === 'home' && (
-              <Home
-                characters={store.characters}
-                onOpen={openSheet}
-                onDelete={onDelete}
+            <main className="app-main">
+              {view.screen === 'home' && (
+                <Home
+                  characters={store.characters}
+                  onOpen={openSheet}
+                  onDelete={onDelete}
+                  onImport={() => setView({ screen: 'import' })}
+                />
+              )}
+
+              {view.screen === 'import' && (
+                <ImportScreen onImported={onImported} onCancel={goHome} />
+              )}
+
+              {view.screen === 'sheet' && open && openCharacter && (
+                <Sheet
+                  character={openCharacter}
+                  state={open.state}
+                  onStateChange={(next) => onStateChange(open.id, next)}
+                  tab={tab}
+                  onTabChange={setTab}
+                />
+              )}
+
+              {view.screen === 'sheet' && (!open || !openCharacter) && (
+                <section className="card">
+                  <p className="error">Ce personnage est introuvable ou son build est illisible.</p>
+                  <button type="button" className="secondary" onClick={goHome}>
+                    Retour à la liste
+                  </button>
+                </section>
+              )}
+            </main>
+
+            <footer className="app-footer">
+              <p>
+                Outil de fan non officiel, non commercial. Pathfinder est une marque déposée de
+                Paizo Inc. Cet outil n’est ni publié, ni approuvé, ni soutenu par Paizo ou Black
+                Book Éditions. Traductions : Black Book Éditions et communauté Pathfinder-fr ;
+                textes anglais : système Foundry pf2e.
+              </p>
+            </footer>
+
+            {menuOpen && (
+              <MenuDrawer
+                tabs={openCharacter ? sheetTabs(openCharacter) : null}
+                currentTab={tab}
+                onTab={setTab}
+                onCharacters={goHome}
                 onImport={() => setView({ screen: 'import' })}
+                onSettings={() => setSettingsOpen(true)}
+                onClose={() => setMenuOpen(false)}
               />
             )}
 
-            {view.screen === 'import' && <ImportScreen onImported={onImported} onCancel={goHome} />}
-
-            {view.screen === 'sheet' && open && openCharacter && (
-              <Sheet
-                character={openCharacter}
-                state={open.state}
-                onStateChange={(next) => onStateChange(open.id, next)}
-                tab={tab}
-                onTabChange={setTab}
+            {settingsOpen && (
+              <SettingsDialog
+                settings={settings}
+                onChange={setSettings}
+                characterName={openCharacter?.name ?? null}
+                onChangeCharacter={goHome}
+                groupStatus={groupStatus}
+                onReloadGroup={reloadGroup}
+                localNames={local}
+                onClearLocal={clearLocal}
+                onClose={() => setSettingsOpen(false)}
               />
             )}
 
-            {view.screen === 'sheet' && (!open || !openCharacter) && (
-              <section className="card">
-                <p className="error">Ce personnage est introuvable ou son build est illisible.</p>
-                <button type="button" className="secondary" onClick={goHome}>
-                  Retour à la liste
-                </button>
-              </section>
+            {detail && (
+              <DetailDialog
+                key={`${detail.kind}|${detail.en}`}
+                request={detail}
+                onClose={() => setDetail(null)}
+              />
             )}
-          </main>
-
-          <footer className="app-footer">
-            <p>
-              Outil de fan non officiel, non commercial. Pathfinder est une marque déposée de Paizo
-              Inc. Cet outil n’est ni publié, ni approuvé, ni soutenu par Paizo ou Black Book
-              Éditions. Traductions des noms : Black Book Éditions et communauté Pathfinder-fr.
-            </p>
-          </footer>
-
-          {menuOpen && (
-            <MenuDrawer
-              tabs={openCharacter ? sheetTabs(openCharacter) : null}
-              currentTab={tab}
-              onTab={setTab}
-              onCharacters={goHome}
-              onImport={() => setView({ screen: 'import' })}
-              onSettings={() => setSettingsOpen(true)}
-              onClose={() => setMenuOpen(false)}
-            />
-          )}
-
-          {settingsOpen && (
-            <SettingsDialog
-              settings={settings}
-              onChange={setSettings}
-              characterName={openCharacter?.name ?? null}
-              onChangeCharacter={goHome}
-              onClose={() => setSettingsOpen(false)}
-            />
-          )}
-
-          {detail && (
-            <DetailDialog
-              key={`${detail.kind}|${detail.en}`}
-              request={detail}
-              onClose={() => setDetail(null)}
-            />
-          )}
-        </div>
-      </DetailContext.Provider>
+          </div>
+        </DetailContext.Provider>
+      </TranslationContext.Provider>
     </SettingsContext.Provider>
   );
 }

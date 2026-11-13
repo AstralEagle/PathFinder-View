@@ -11,7 +11,7 @@ import {
   weaponAttack,
 } from '../../rules/character.ts';
 import { signed, trCore, trCoreOr } from '../../i18n/translate.ts';
-import { trName } from '../../i18n/names.ts';
+import { useTr } from '../../sources/TranslationContext.ts';
 import { weaponName } from '../../i18n/itemNames.ts';
 import type { GameState } from '../../game/state.ts';
 import { formatDistance } from '../../rules/units.ts';
@@ -42,6 +42,7 @@ interface Props {
 
 export function CombatTab({ c, state, onChange }: Props) {
   const { distanceUnit } = useSettings();
+  const trName = useTr();
   const dc = classDC(c);
   const perc = perception(c);
 

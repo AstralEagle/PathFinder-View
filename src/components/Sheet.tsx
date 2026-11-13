@@ -2,7 +2,7 @@ import type { Character } from '../pathbuilder/model.ts';
 import type { GameState } from '../game/state.ts';
 import { maxHp } from '../rules/character.ts';
 import { trCore } from '../i18n/translate.ts';
-import { trName } from '../i18n/names.ts';
+import { useTr } from '../sources/TranslationContext.ts';
 import { CombatTab } from './tabs/CombatTab.tsx';
 import { SkillsTab } from './tabs/SkillsTab.tsx';
 import { FeatsTab } from './tabs/FeatsTab.tsx';
@@ -21,6 +21,7 @@ interface Props {
 }
 
 export function Sheet({ character: c, state, onStateChange, tab, onTabChange }: Props) {
+  const trName = useTr();
   const max = maxHp(c);
   const tabs = sheetTabs(c);
   const current = tabs.some((t) => t.key === tab) ? tab : 'combat';

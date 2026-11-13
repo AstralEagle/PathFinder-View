@@ -2,7 +2,7 @@ import type { StoredCharacter } from '../game/roster.ts';
 import { loadCharacter } from '../game/roster.ts';
 import { maxHp } from '../rules/character.ts';
 import { trCore } from '../i18n/translate.ts';
-import { trName } from '../i18n/names.ts';
+import { useTr } from '../sources/TranslationContext.ts';
 
 interface Props {
   characters: StoredCharacter[];
@@ -12,6 +12,7 @@ interface Props {
 }
 
 export function Home({ characters, onOpen, onDelete, onImport }: Props) {
+  const trName = useTr();
   return (
     <>
       <section className="card">

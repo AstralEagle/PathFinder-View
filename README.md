@@ -35,11 +35,19 @@ Le dépôt contient un fichier [render.yaml](render.yaml) (Blueprint).
 
 ## Compléter les traductions
 
-Les noms sont traduits dans cet ordre de priorité :
+L'appli interroge une **chaîne de sources** : si la première ne connaît pas l'élément, elle passe à la suivante.
 
-1. **`src/i18n/names.override.fr.json`** : vos noms officiels VF (Black Book Éditions), écrits à la main. Toujours prioritaires.
-2. **`src/i18n/names.fr.json`** : noms de la traduction communautaire [Pathfinder-fr](https://github.com/pathfinder-fr/foundryvtt-pathfinder2-fr). Fichier généré, ne pas modifier à la main.
-3. Sinon, le nom anglais s'affiche avec le marqueur **VO**.
+| #   | Source                                                                                                        | Apporte                                                              |
+| --- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| 1   | **Fichier du groupe** (adresse dans Paramètres) + `src/i18n/names.override.fr.json`                           | Noms officiels VF (Black Book Éditions), descriptions facultatives   |
+| 2   | **Pathfinder-fr**, module Foundry [pf2-fr](https://github.com/pathfinder-fr/foundryvtt-pathfinder2-fr)        | Noms (embarqués dans `names.fr.json`) et descriptions (à la demande) |
+| 3   | **Saisie locale** (fenêtre de détail d'un nom non traduit)                                                    | Vos corrections, sur l'appareil                                      |
+| 4   | **Pathfinder-fr**, module Foundry [lang-fr](https://github.com/pathfinder-fr/foundryvtt-pathfinder2e-lang-fr) | Traits, langues, états                                               |
+| 5   | **Foundry pf2e** ([anglais officiel](https://github.com/foundryvtt/pf2e))                                     | Description anglaise en dernier recours, niveau, traits, actions     |
+
+Sinon, le nom anglais s'affiche avec le marqueur **VO**.
+
+**Fichier du groupe** : un JSON `{ "Nom anglais": "Nom officiel" }`, voir [docs/fichier-groupe.exemple.json](docs/fichier-groupe.exemple.json). Le plus simple : créer un [Gist GitHub](https://gist.github.com), y coller le fichier, puis copier l'adresse du Gist dans Paramètres → Sources de traduction. Chaque joueur fait de même ; une modification du Gist est prise en compte au démarrage suivant (ou via « Recharger »). Les traductions saisies localement peuvent être copiées depuis les Paramètres pour être ajoutées au Gist.
 
 Les termes de base (caractéristiques, compétences, rangs, runes…) sont dans `src/i18n/core.fr.json`.
 
@@ -49,7 +57,7 @@ Les termes de base (caractéristiques, compétences, rangs, runes…) sont dans 
 | `npm run i18n:missing -- perso.json` | Même chose pour un export choisi                                         |
 | `npm run i18n:import`                | Retélécharge les noms Pathfinder-fr (noms seulement, aucune description) |
 
-**Descriptions** : toucher un don, un objet, une capacité, la classe, l'ascendance, l'héritage ou l'historique ouvre sa description. L'appli la demande à Pathfinder-fr (fichiers JSON publics sur GitHub), une catégorie à la fois, puis la garde en cache sur l'appareil pour le hors-ligne. Paramètres → « Vider le cache des descriptions » force un nouveau téléchargement.
+**Descriptions** : toucher un don, un objet, une capacité, la classe, l'ascendance, l'héritage ou l'historique ouvre sa description. Les sources en ligne sont téléchargées une catégorie à la fois puis gardées en cache sur l'appareil pour le hors-ligne. Paramètres → « Vider le cache des sources » force un nouveau téléchargement.
 
 Pour corriger ou compléter un nom, ajoutez une ligne `"Nom anglais": "Nom officiel"` dans `names.override.fr.json`.
 

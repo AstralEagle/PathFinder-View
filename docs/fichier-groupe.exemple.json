@@ -1,0 +1,9 @@
+{
+  "_comment": "Fichier de traductions du groupe. Clé = nom anglais exact (comme dans Pathbuilder), valeur = nom officiel VF (Black Book Éditions). Les clés commençant par _ sont ignorées.",
+  "Arbalest": "Arbalète lourde",
+  "Slinger's Precision": "Précision du franc-tireur",
+  "Thieves' Toolkit": {
+    "name": "Outils de voleur",
+    "description": "<p>Description facultative, en HTML simple (p, strong, em, ul, li).</p>"
+  }
+}

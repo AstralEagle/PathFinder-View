@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { trName } from '../i18n/names.ts';
+import { useTr } from '../sources/TranslationContext.ts';
 import { useSettings } from '../settings.ts';
 import { useOpenDetail } from '../details/DetailContext.ts';
 import type { DetailKind } from '../details/packs.ts';
@@ -24,6 +24,7 @@ interface Props {
 export function Name({ en, fr, detail }: Props) {
   const { nameDisplay } = useSettings();
   const openDetail = useOpenDetail();
+  const trName = useTr();
   const translated = fr === undefined ? trName(en) : fr;
 
   let content: ReactNode;
