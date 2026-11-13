@@ -11,22 +11,31 @@ import {
   type Store,
 } from './game/roster.ts';
 import { loadStore, saveStore } from './storage.ts';
+import { loadSettings, saveSettings, SettingsContext, type Settings } from './settings.ts';
 import { Home } from './components/Home.tsx';
 import { ImportScreen } from './components/ImportScreen.tsx';
 import { Sheet } from './components/Sheet.tsx';
+import { MenuDrawer } from './components/MenuDrawer.tsx';
+import { SettingsDialog } from './components/SettingsDialog.tsx';
+import { sheetTabs, type TabKey } from './components/sheetTabs.ts';
 
 type View = { screen: 'home' } | { screen: 'import' } | { screen: 'sheet'; id: string };
 
 export default function App() {
   const [store, setStore] = useState<Store>(loadStore);
+  const [settings, setSettings] = useState<Settings>(loadSettings);
   const [view, setView] = useState<View>(() =>
     store.characters.length === 1
       ? { screen: 'sheet', id: store.characters[0]!.id }
       : { screen: 'home' },
   );
+  const [tab, setTab] = useState<TabKey>('combat');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Sauvegarde automatique à chaque modification.
   useEffect(() => saveStore(store), [store]);
+  useEffect(() => saveSettings(settings), [settings]);
 
   const open =
     view.screen === 'sheet' ? store.characters.find((sc) => sc.id === view.id) : undefined;
@@ -38,6 +47,11 @@ export default function App() {
     return r.ok ? r.character : null;
   }, [openRaw]);
 
+  function openSheet(id: string) {
+    setTab('combat');
+    setView({ screen: 'sheet', id });
+  }
+
   function onImported(c: Character, raw: string) {
     const existing = findByName(store, c.name);
     if (existing) {
@@ -47,12 +61,12 @@ export default function App() {
       );
       if (!ok) return;
       setStore(updateBuild(store, existing.id, c, raw));
-      setView({ screen: 'sheet', id: existing.id });
+      openSheet(existing.id);
       return;
     }
     const added = addCharacter(store, c, raw);
     setStore(added.store);
-    setView({ screen: 'sheet', id: added.id });
+    openSheet(added.id);
   }
 
   function onDelete(id: string) {
@@ -67,52 +81,88 @@ export default function App() {
     setStore((s) => updateState(s, id, next));
   }
 
+  const goHome = () => setView({ screen: 'home' });
+
   return (
-    <div className={view.screen === 'sheet' ? 'app with-hp-bar' : 'app'}>
-      <header className="app-header">
-        <h1>Fiche PF2</h1>
-      </header>
+    <SettingsContext.Provider value={settings}>
+      <div className={view.screen === 'sheet' ? 'app with-hp-bar' : 'app'}>
+        <header className="app-header">
+          <h1>Fiche PF2</h1>
+          <button
+            type="button"
+            className="burger"
+            aria-label="Ouvrir le menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(true)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </header>
 
-      <main className="app-main">
-        {view.screen === 'home' && (
-          <Home
-            characters={store.characters}
-            onOpen={(id) => setView({ screen: 'sheet', id })}
-            onDelete={onDelete}
+        <main className="app-main">
+          {view.screen === 'home' && (
+            <Home
+              characters={store.characters}
+              onOpen={openSheet}
+              onDelete={onDelete}
+              onImport={() => setView({ screen: 'import' })}
+            />
+          )}
+
+          {view.screen === 'import' && <ImportScreen onImported={onImported} onCancel={goHome} />}
+
+          {view.screen === 'sheet' && open && openCharacter && (
+            <Sheet
+              character={openCharacter}
+              state={open.state}
+              onStateChange={(next) => onStateChange(open.id, next)}
+              tab={tab}
+              onTabChange={setTab}
+            />
+          )}
+
+          {view.screen === 'sheet' && (!open || !openCharacter) && (
+            <section className="card">
+              <p className="error">Ce personnage est introuvable ou son build est illisible.</p>
+              <button type="button" className="secondary" onClick={goHome}>
+                Retour à la liste
+              </button>
+            </section>
+          )}
+        </main>
+
+        <footer className="app-footer">
+          <p>
+            Outil de fan non officiel, non commercial. Pathfinder est une marque déposée de Paizo
+            Inc. Cet outil n’est ni publié, ni approuvé, ni soutenu par Paizo ou Black Book
+            Éditions. Traductions des noms : Black Book Éditions et communauté Pathfinder-fr.
+          </p>
+        </footer>
+
+        {menuOpen && (
+          <MenuDrawer
+            tabs={openCharacter ? sheetTabs(openCharacter) : null}
+            currentTab={tab}
+            onTab={setTab}
+            onCharacters={goHome}
             onImport={() => setView({ screen: 'import' })}
+            onSettings={() => setSettingsOpen(true)}
+            onClose={() => setMenuOpen(false)}
           />
         )}
 
-        {view.screen === 'import' && (
-          <ImportScreen onImported={onImported} onCancel={() => setView({ screen: 'home' })} />
-        )}
-
-        {view.screen === 'sheet' && open && openCharacter && (
-          <Sheet
-            character={openCharacter}
-            state={open.state}
-            onStateChange={(next) => onStateChange(open.id, next)}
-            onBack={() => setView({ screen: 'home' })}
+        {settingsOpen && (
+          <SettingsDialog
+            settings={settings}
+            onChange={setSettings}
+            characterName={openCharacter?.name ?? null}
+            onChangeCharacter={goHome}
+            onClose={() => setSettingsOpen(false)}
           />
         )}
-
-        {view.screen === 'sheet' && (!open || !openCharacter) && (
-          <section className="card">
-            <p className="error">Ce personnage est introuvable ou son build est illisible.</p>
-            <button type="button" className="secondary" onClick={() => setView({ screen: 'home' })}>
-              Retour à la liste
-            </button>
-          </section>
-        )}
-      </main>
-
-      <footer className="app-footer">
-        <p>
-          Outil de fan non officiel, non commercial. Pathfinder est une marque déposée de Paizo Inc.
-          Cet outil n’est ni publié, ni approuvé, ni soutenu par Paizo ou Black Book Éditions.
-          Traductions des noms : Black Book Éditions et communauté Pathfinder-fr.
-        </p>
-      </footer>
-    </div>
+      </div>
+    </SettingsContext.Provider>
   );
 }

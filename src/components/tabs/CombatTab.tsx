@@ -14,6 +14,8 @@ import { signed, trCore, trCoreOr } from '../../i18n/translate.ts';
 import { trName } from '../../i18n/names.ts';
 import { weaponName } from '../../i18n/itemNames.ts';
 import type { GameState } from '../../game/state.ts';
+import { formatDistance } from '../../rules/units.ts';
+import { useSettings } from '../../settings.ts';
 import { Name } from '../Name.tsx';
 import { HeroPoints } from '../HeroPoints.tsx';
 
@@ -39,6 +41,7 @@ interface Props {
 }
 
 export function CombatTab({ c, state, onChange }: Props) {
+  const { distanceUnit } = useSettings();
   const dc = classDC(c);
   const perc = perception(c);
 
@@ -68,7 +71,7 @@ export function CombatTab({ c, state, onChange }: Props) {
         <h3>Sens et déplacement</h3>
         <div className="stats">
           <Stat label="Perception" value={signed(perc.total)} sub={trCoreOr('ranks', perc.rank)} />
-          <Stat label="Vitesse" value={`${speed(c)} pieds`} />
+          <Stat label="Vitesse" value={formatDistance(speed(c), distanceUnit)} />
           {dc !== null && <Stat label="DD de classe" value={String(dc)} />}
         </div>
       </section>

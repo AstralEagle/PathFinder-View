@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { Character } from '../pathbuilder/model.ts';
 import type { GameState } from '../game/state.ts';
 import { maxHp } from '../rules/character.ts';
@@ -11,28 +10,20 @@ import { InventoryTab } from './tabs/InventoryTab.tsx';
 import { SpellsTab } from './tabs/SpellsTab.tsx';
 import { IdentityTab } from './tabs/IdentityTab.tsx';
 import { HpBar } from './HpBar.tsx';
-
-type TabKey = 'combat' | 'skills' | 'feats' | 'inventory' | 'spells' | 'identity';
+import { sheetTabs, type TabKey } from './sheetTabs.ts';
 
 interface Props {
   character: Character;
   state: GameState;
   onStateChange: (next: GameState) => void;
-  onBack: () => void;
+  tab: TabKey;
+  onTabChange: (tab: TabKey) => void;
 }
 
-export function Sheet({ character: c, state, onStateChange, onBack }: Props) {
-  const [tab, setTab] = useState<TabKey>('combat');
+export function Sheet({ character: c, state, onStateChange, tab, onTabChange }: Props) {
   const max = maxHp(c);
-
-  const tabs: { key: TabKey; label: string }[] = [
-    { key: 'combat', label: 'Combat' },
-    { key: 'skills', label: 'Compétences' },
-    { key: 'feats', label: 'Dons' },
-    { key: 'inventory', label: 'Inventaire' },
-    ...(c.spellCasters.length > 0 ? [{ key: 'spells' as const, label: 'Sorts' }] : []),
-    { key: 'identity', label: 'Identité' },
-  ];
+  const tabs = sheetTabs(c);
+  const current = tabs.some((t) => t.key === tab) ? tab : 'combat';
 
   const className = trCore('classes', c.className) ?? trName(c.className) ?? c.className;
   const ancestry = trCore('ancestries', c.ancestry) ?? trName(c.ancestry) ?? c.ancestry;
@@ -40,43 +31,36 @@ export function Sheet({ character: c, state, onStateChange, onBack }: Props) {
   return (
     <div className="sheet">
       <div className="sheet-head">
-        <button
-          type="button"
-          className="icon-button"
-          aria-label="Retour à la liste"
-          onClick={onBack}
-        >
-          ←
-        </button>
-        <div className="sheet-title">
-          <h2 className="char-name">{c.name}</h2>
-          <p className="char-sub">
-            {className} {ancestry.toLowerCase()} · niveau {c.level}
-          </p>
-        </div>
+        <h2 className="char-name">{c.name}</h2>
+        <p className="char-sub">
+          {className} {ancestry.toLowerCase()} · niveau {c.level}
+        </p>
       </div>
 
+      {/* Onglets visibles sur grand écran ; sur mobile, la navigation passe par le menu burger. */}
       <nav className="tabs" aria-label="Sections de la fiche">
         {tabs.map((t) => (
           <button
             key={t.key}
             type="button"
-            className={t.key === tab ? 'tab active' : 'tab'}
-            aria-current={t.key === tab ? 'page' : undefined}
-            onClick={() => setTab(t.key)}
+            className={t.key === current ? 'tab active' : 'tab'}
+            aria-current={t.key === current ? 'page' : undefined}
+            onClick={() => onTabChange(t.key)}
           >
             {t.label}
           </button>
         ))}
       </nav>
 
+      <h2 className="mobile-tab-title">{tabs.find((t) => t.key === current)?.label}</h2>
+
       <div className="tab-panel">
-        {tab === 'combat' && <CombatTab c={c} state={state} onChange={onStateChange} />}
-        {tab === 'skills' && <SkillsTab c={c} />}
-        {tab === 'feats' && <FeatsTab c={c} />}
-        {tab === 'inventory' && <InventoryTab c={c} state={state} onChange={onStateChange} />}
-        {tab === 'spells' && <SpellsTab />}
-        {tab === 'identity' && <IdentityTab c={c} />}
+        {current === 'combat' && <CombatTab c={c} state={state} onChange={onStateChange} />}
+        {current === 'skills' && <SkillsTab c={c} />}
+        {current === 'feats' && <FeatsTab c={c} />}
+        {current === 'inventory' && <InventoryTab c={c} state={state} onChange={onStateChange} />}
+        {current === 'spells' && <SpellsTab />}
+        {current === 'identity' && <IdentityTab c={c} />}
       </div>
 
       <HpBar state={state} max={max} onChange={onStateChange} />
