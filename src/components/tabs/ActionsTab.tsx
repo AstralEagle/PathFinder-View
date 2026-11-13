@@ -1,0 +1,140 @@
+import { useEffect, useMemo, useState } from 'react';
+import type { Character } from '../../pathbuilder/model.ts';
+import {
+  ACTION_GROUPS,
+  actionGlyph,
+  basicActionCandidates,
+  characterActionCandidates,
+  classifyAction,
+  type ActionCandidate,
+  type ActionGroup,
+} from '../../game/actions.ts';
+import { findFoundryItem, type FoundryItem } from '../../sources/foundry.ts';
+import { Name } from '../Name.tsx';
+
+interface Resolved {
+  cand: ActionCandidate;
+  item: FoundryItem;
+  group: ActionGroup;
+}
+
+type Status = { state: 'loading' } | { state: 'done'; list: Resolved[]; failed: number };
+
+/** Interroge Foundry pf2e pour chaque candidat et garde ceux qui sont des actions. */
+function useResolvedActions(candidates: ActionCandidate[]): Status {
+  const key = candidates.map((c) => `${c.kind}:${c.en}`).join('|');
+  const [result, setResult] = useState<{ key: string; status: Status } | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.allSettled(candidates.map((c) => findFoundryItem(c.kind, c.en))).then((results) => {
+      if (cancelled) return;
+      const list: Resolved[] = [];
+      let failed = 0;
+      results.forEach((r, i) => {
+        if (r.status === 'rejected') {
+          failed++;
+          return;
+        }
+        const item = r.value;
+        const group = item ? classifyAction(item) : null;
+        if (item && group) list.push({ cand: candidates[i]!, item, group });
+      });
+      setResult({ key, status: { state: 'done', list, failed } });
+    });
+    return () => {
+      cancelled = true;
+    };
+    // `key` résume la liste des candidats.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+
+  return result?.key === key ? result.status : { state: 'loading' };
+}
+
+const ORIGIN: Record<ActionCandidate['origin'], string> = {
+  feat: 'Don',
+  special: 'Capacité',
+  basic: 'De base',
+};
+
+function ActionList({ list }: { list: Resolved[] }) {
+  return (
+    <ul className="actions-list">
+      {list.map(({ cand, item }) => (
+        <li key={`${cand.kind}:${cand.en}`}>
+          <span className="glyph" aria-label={item.actionType ?? undefined}>
+            {actionGlyph(item) || '⏱'}
+          </span>
+          <Name en={cand.en} detail={{ kind: cand.kind }} />
+          <span className="origin">{ORIGIN[cand.origin]}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Groups({ status, empty }: { status: Status; empty: string }) {
+  if (status.state === 'loading') {
+    return (
+      <p className="muted" role="status">
+        Recherche des actions… (la première fois, cela peut prendre quelques secondes)
+      </p>
+    );
+  }
+  return (
+    <>
+      {status.list.length === 0 && <p className="muted">{empty}</p>}
+      {ACTION_GROUPS.map((g) => {
+        const list = status.list.filter((r) => r.group === g.key);
+        return list.length === 0 ? null : (
+          <div key={g.key} className="action-group">
+            <h4>{g.label}</h4>
+            <ActionList list={list} />
+          </div>
+        );
+      })}
+      {status.failed > 0 && (
+        <p className="detail-notice" role="alert">
+          {status.failed} élément(s) n’ont pas pu être vérifiés (hors connexion ?).
+        </p>
+      )}
+    </>
+  );
+}
+
+export function ActionsTab({ c }: { c: Character }) {
+  const own = useMemo(() => characterActionCandidates(c), [c]);
+  const basic = useMemo(() => basicActionCandidates(), []);
+  const ownStatus = useResolvedActions(own);
+  const [showBasic, setShowBasic] = useState(false);
+
+  return (
+    <>
+      <section className="card">
+        <h3>Actions du personnage</h3>
+        <Groups status={ownStatus} empty="Aucun don ni capacité n’est une action." />
+        <p className="legend">
+          ◆ action · ◆◆ / ◆◆◆ activité · ◇ gratuite · ⟲ réaction · ⏱ exploration
+        </p>
+      </section>
+
+      <section className="card">
+        <h3>Actions de base</h3>
+        {showBasic ? (
+          <BasicActions candidates={basic} />
+        ) : (
+          <button type="button" className="secondary full" onClick={() => setShowBasic(true)}>
+            Afficher les actions de base
+          </button>
+        )}
+      </section>
+    </>
+  );
+}
+
+/** Chargées seulement à la demande, pour économiser les requêtes. */
+function BasicActions({ candidates }: { candidates: ActionCandidate[] }) {
+  const status = useResolvedActions(candidates);
+  return <Groups status={status} empty="Actions de base introuvables." />;
+}

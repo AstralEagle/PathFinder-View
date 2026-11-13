@@ -23,6 +23,7 @@ type Folder =
   | 'classes';
 
 export const FOLDERS_BY_KIND: Record<DetailKind, Folder[]> = {
+  action: ['actions'],
   feat: ['feats', 'heritages', 'class-features', 'ancestry-features', 'actions'],
   special: ['class-features', 'ancestry-features', 'heritages', 'feats', 'actions'],
   item: ['equipment'],

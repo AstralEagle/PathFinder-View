@@ -1,6 +1,7 @@
 import type { Character } from '../pathbuilder/model.ts';
 
-export type TabKey = 'combat' | 'skills' | 'feats' | 'inventory' | 'spells' | 'identity';
+export type TabKey =
+  'combat' | 'actions' | 'skills' | 'feats' | 'inventory' | 'spells' | 'identity';
 
 export interface TabDef {
   key: TabKey;
@@ -11,6 +12,7 @@ export interface TabDef {
 export function sheetTabs(c: Character): TabDef[] {
   return [
     { key: 'combat', label: 'Combat' },
+    { key: 'actions', label: 'Actions' },
     { key: 'skills', label: 'Compétences' },
     { key: 'feats', label: 'Dons et capacités' },
     { key: 'inventory', label: 'Inventaire' },

@@ -21,9 +21,18 @@ export type Pack =
 
 /** Type d'élément affiché dans la fiche : détermine les catégories à interroger, dans l'ordre. */
 export type DetailKind =
-  'feat' | 'special' | 'item' | 'spell' | 'heritage' | 'ancestry' | 'background' | 'class';
+  | 'feat'
+  | 'special'
+  | 'action'
+  | 'item'
+  | 'spell'
+  | 'heritage'
+  | 'ancestry'
+  | 'background'
+  | 'class';
 
 export const PACKS_BY_KIND: Record<DetailKind, Pack[]> = {
+  action: ['actionspf2e'],
   feat: ['feats-srd', 'heritages', 'classfeatures', 'ancestryfeatures', 'actionspf2e'],
   special: ['classfeatures', 'ancestryfeatures', 'heritages', 'feats-srd', 'actionspf2e'],
   item: ['equipment-srd'],

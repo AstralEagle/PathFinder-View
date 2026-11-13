@@ -5,6 +5,7 @@ import { trCore } from '../i18n/translate.ts';
 import { useTr } from '../sources/TranslationContext.ts';
 import { CombatTab } from './tabs/CombatTab.tsx';
 import { SkillsTab } from './tabs/SkillsTab.tsx';
+import { ActionsTab } from './tabs/ActionsTab.tsx';
 import { FeatsTab } from './tabs/FeatsTab.tsx';
 import { InventoryTab } from './tabs/InventoryTab.tsx';
 import { SpellsTab } from './tabs/SpellsTab.tsx';
@@ -57,6 +58,7 @@ export function Sheet({ character: c, state, onStateChange, tab, onTabChange }: 
 
       <div className="tab-panel">
         {current === 'combat' && <CombatTab c={c} state={state} onChange={onStateChange} />}
+        {current === 'actions' && <ActionsTab c={c} />}
         {current === 'skills' && <SkillsTab c={c} />}
         {current === 'feats' && <FeatsTab c={c} />}
         {current === 'inventory' && <InventoryTab c={c} state={state} onChange={onStateChange} />}
