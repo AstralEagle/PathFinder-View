@@ -384,6 +384,29 @@ button {
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  /* Zone de défilement sur toute la largeur de la carte : la barre de défilement longe le bord. */
+  margin: 0 -1rem;
+  padding: 0 0.75rem 0 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--parchment-dark) transparent;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.scroll-list .skill:last-child {
+  border-bottom: none;
+}
+
+.skills-card {
+  padding-bottom: 0.4rem;
+}
+
+.skills-card .card-head {
+  margin-bottom: 0;
+  padding-bottom: 0.25rem;
+}
+
+.skills-card .legend {
+  margin-top: 0.35rem;
 }
 
 .skill-name {
@@ -400,19 +423,21 @@ button {
 
 .segmented {
   display: inline-flex;
-  border: 2px solid var(--green);
-  border-radius: 6px;
+  border: 1px solid var(--green);
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .segmented button {
-  min-width: 44px;
-  min-height: 36px;
-  padding: 0 0.6rem;
+  min-width: 2rem;
+  min-height: 0;
+  padding: 0.1rem 0.45rem;
   border: none;
   background: #fff;
   color: var(--green);
+  font-size: 0.75rem;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .segmented button.active {
@@ -1055,7 +1080,8 @@ body.no-scroll {
 /* --- Barre de PV --- */
 
 .app.with-hp-bar {
-  padding-bottom: 9.5rem;
+  /* Hauteur réelle de la barre de PV, publiée par HpBar. */
+  padding-bottom: var(--hp-bar-h, 9.5rem);
 }
 
 .hp-bar {

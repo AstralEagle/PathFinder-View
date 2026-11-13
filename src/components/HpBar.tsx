@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { applyDamage, applyHealing, setTempHp, type GameState } from '../game/state.ts';
 
 interface Props {
@@ -10,7 +10,23 @@ interface Props {
 /** Barre de PV toujours visible en bas de l'écran. */
 export function HpBar({ state, max, onChange }: Props) {
   const [amount, setAmount] = useState('');
+  const barRef = useRef<HTMLDivElement>(null);
   const { current, temp } = state.hp;
+
+  // Publie la hauteur réelle de la barre (--hp-bar-h) : la page réserve exactement cet espace.
+  useLayoutEffect(() => {
+    const el = barRef.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty('--hp-bar-h', `${el.offsetHeight}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--hp-bar-h');
+    };
+  }, []);
   const ratio = max > 0 ? Math.min(1, current / max) : 0;
   const value = Number.parseInt(amount, 10);
   const valid = Number.isFinite(value) && value > 0;
@@ -24,7 +40,7 @@ export function HpBar({ state, max, onChange }: Props) {
   }
 
   return (
-    <div className="hp-bar" role="region" aria-label="Points de vie">
+    <div className="hp-bar" ref={barRef} role="region" aria-label="Points de vie">
       <div className="hp-top">
         <div className="hp-count" aria-live="polite">
           <span className="hp-label">PV</span>

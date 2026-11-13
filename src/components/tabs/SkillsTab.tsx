@@ -54,7 +54,8 @@ export function SkillsTab({ c }: { c: Character }) {
   const tr = useTr();
   const [sortBy, setSortBy] = useState<SortBy>(readSort);
   const listRef = useRef<HTMLUListElement>(null);
-  const maxHeight = useFitHeight(listRef, 56);
+  // Sous la liste : légende, marges de la carte et de la page (~58 px).
+  const maxHeight = useFitHeight(listRef, 58);
 
   const rows = useMemo(() => {
     const list: SkillRow[] = [
