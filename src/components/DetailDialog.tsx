@@ -79,9 +79,11 @@ function LocalNameForm({ en, onSave }: { en: string; onSave: (fr: string) => voi
 interface Props {
   request: DetailRequest;
   onClose: () => void;
+  /** Retour à la description précédente (historique), si elle existe. */
+  onBack?: () => void;
 }
 
-export function DetailDialog({ request, onClose }: Props) {
+export function DetailDialog({ request, onClose, onBack }: Props) {
   const { tr, sources, group, lang, setLocalName } = useTranslation();
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
   const [attempt, setAttempt] = useState(0);
@@ -116,7 +118,7 @@ export function DetailDialog({ request, onClose }: Props) {
     : [];
 
   return (
-    <Modal title={title} onClose={onClose}>
+    <Modal title={title} onClose={onClose} onBack={onBack}>
       {title !== request.en && <p className="detail-en">{request.en}</p>}
 
       {request.runes && (

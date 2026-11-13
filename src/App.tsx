@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Character } from './pathbuilder/model.ts';
 import { parsePathbuilderText } from './pathbuilder/parse.ts';
 import type { GameState } from './game/state.ts';
@@ -44,7 +44,13 @@ export default function App() {
   // Hauteur réelle de l'en-tête (--header-h) : les éléments collants se placent juste dessous.
   const headerRef = useRef<HTMLElement>(null);
   usePublishHeight(headerRef, '--header-h');
-  const [detail, setDetail] = useState<DetailRequest | null>(null);
+  // Historique des fenêtres de détail : ouvrir une description depuis une autre l'empile (← y revient).
+  const [details, setDetails] = useState<DetailRequest[]>([]);
+  const detail = details.length > 0 ? details[details.length - 1]! : null;
+  const openDetail = useCallback(
+    (req: DetailRequest) => setDetails((stack) => [...stack, req]),
+    [],
+  );
   const { translation, groupStatus, reloadGroup, local, clearLocal } = useTranslationState(
     settings.groupUrl,
   );
@@ -102,7 +108,7 @@ export default function App() {
   return (
     <SettingsContext.Provider value={settings}>
       <TranslationContext.Provider value={translation}>
-        <DetailContext.Provider value={setDetail}>
+        <DetailContext.Provider value={openDetail}>
           <div className={view.screen === 'sheet' ? 'app with-hp-bar' : 'app'}>
             <header className="app-header" ref={headerRef}>
               {view.screen === 'sheet' && openCharacter ? (
@@ -197,9 +203,12 @@ export default function App() {
 
             {detail && (
               <DetailDialog
-                key={`${detail.kind}|${detail.en}`}
+                key={`${details.length}|${detail.kind}|${detail.en}`}
                 request={detail}
-                onClose={() => setDetail(null)}
+                onClose={() => setDetails([])}
+                onBack={
+                  details.length > 1 ? () => setDetails((stack) => stack.slice(0, -1)) : undefined
+                }
               />
             )}
           </div>

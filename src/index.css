@@ -1192,6 +1192,18 @@ body.no-scroll {
   border-bottom: 1px solid var(--parchment-dark);
 }
 
+.panel-head.with-back {
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+}
+
+.panel-head h2 {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .panel-head h2 {
   margin: 0;
   font-size: 1.2rem;
