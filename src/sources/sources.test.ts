@@ -86,10 +86,10 @@ describe('parseFoundryItem', () => {
 describe('chaîne des noms', () => {
   const lang = flattenLang({ PF2E: { LanguageCommon: 'Commun' } });
 
-  it('respecte l’ordre : groupe, Pathfinder-fr, local, lang-fr', () => {
+  it('respecte l’ordre : groupe, Pathfinder-fr, lang-fr, local', () => {
     const sources = {
       group: { names: { 'Cat Fall': 'Chute du chat (groupe)' }, descriptions: {} },
-      local: { 'Cat Fall': 'Local', 'Slinger’s Thing': 'Truc local' },
+      local: { 'Cat Fall': 'Local', 'Slinger’s Thing': 'Truc local', Common: 'Local commun' },
       lang,
     };
     const tr = buildNameLookup(sources);

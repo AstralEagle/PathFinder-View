@@ -152,11 +152,11 @@ export function SettingsDialog({
             <strong>Pathfinder-fr</strong> (module Foundry pf2-fr) : noms et descriptions
           </li>
           <li>
-            <strong>Saisie locale</strong> : {Object.keys(localNames).length} traduction(s) sur cet
-            appareil
+            <strong>Pathfinder-fr</strong> (module Foundry lang-fr) : traits, langues, états
           </li>
           <li>
-            <strong>Pathfinder-fr</strong> (module Foundry lang-fr) : traits, langues, états
+            <strong>Saisie locale</strong> : {Object.keys(localNames).length} traduction(s) sur cet
+            appareil
           </li>
           <li>
             <strong>Foundry pf2e</strong> : texte officiel anglais, niveau, traits

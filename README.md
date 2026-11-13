@@ -41,8 +41,8 @@ L'appli interroge une **chaîne de sources** : si la première ne connaît pas l
 | --- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | 1   | **Fichier du groupe** (adresse dans Paramètres) + `src/i18n/names.override.fr.json`                           | Noms officiels VF (Black Book Éditions), descriptions facultatives   |
 | 2   | **Pathfinder-fr**, module Foundry [pf2-fr](https://github.com/pathfinder-fr/foundryvtt-pathfinder2-fr)        | Noms (embarqués dans `names.fr.json`) et descriptions (à la demande) |
-| 3   | **Saisie locale** (fenêtre de détail d'un nom non traduit)                                                    | Vos corrections, sur l'appareil                                      |
-| 4   | **Pathfinder-fr**, module Foundry [lang-fr](https://github.com/pathfinder-fr/foundryvtt-pathfinder2e-lang-fr) | Traits, langues, états                                               |
+| 3   | **Pathfinder-fr**, module Foundry [lang-fr](https://github.com/pathfinder-fr/foundryvtt-pathfinder2e-lang-fr) | Traits, langues, états                                               |
+| 4   | **Saisie locale** (fenêtre de détail d'un nom non traduit)                                                    | Vos ajouts, sur l'appareil                                           |
 | 5   | **Foundry pf2e** ([anglais officiel](https://github.com/foundryvtt/pf2e))                                     | Description anglaise en dernier recours, niveau, traits, actions     |
 
 Sinon, le nom anglais s'affiche avec le marqueur **VO**.

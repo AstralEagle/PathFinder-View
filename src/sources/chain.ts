@@ -3,8 +3,8 @@
  * sinon on passe à la suivante :
  *   1. Fichier du groupe (URL, ex. Gist) + surcharge du dépôt (names.override.fr.json) : noms officiels BBE
  *   2. Pathfinder-fr, module Foundry « pf2-fr » : noms (embarqués) et descriptions (à la demande)
- *   3. Saisie locale dans l'appli
- *   4. Pathfinder-fr, module Foundry « lang-fr » : termes de jeu (langues, traits, états)
+ *   3. Pathfinder-fr, module Foundry « lang-fr » : termes de jeu (langues, traits, états)
+ *   4. Saisie locale dans l'appli
  *   5. Foundry pf2e, anglais officiel : description, niveau, traits, actions
  */
 import names from '../i18n/names.fr.json';
@@ -33,16 +33,17 @@ export interface NameSources {
 
 /** Fonction de traduction des noms, dans l'ordre de la chaîne. */
 export function buildNameLookup({ group, local, lang }: NameSources): Lookup {
-  const tiers = createLookup(group.names, overrides as Dictionary, names as Dictionary, local);
-  return (en) => tiers(en) ?? (lang ? termFr(lang, en) : null);
+  const official = createLookup(group.names, overrides as Dictionary, names as Dictionary);
+  const localLookup = createLookup(local);
+  return (en) => official(en) ?? (lang ? termFr(lang, en) : null) ?? localLookup(en);
 }
 
 /** Indique quelle source fournit le nom d'un élément. */
 export function nameSource({ group, local, lang }: NameSources, en: string): SourceId | null {
   if (createLookup(group.names, overrides as Dictionary)(en)) return 'group';
   if (createLookup(names as Dictionary)(en)) return 'pf2fr';
-  if (createLookup(local)(en)) return 'local';
   if (lang && termFr(lang, en)) return 'langfr';
+  if (createLookup(local)(en)) return 'local';
   return null;
 }
 
