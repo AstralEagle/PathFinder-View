@@ -4,9 +4,10 @@ import { parsePathbuilderText } from '../pathbuilder/parse.ts';
 
 interface Props {
   onImported: (character: Character, rawJson: string) => void;
+  onCancel: () => void;
 }
 
-export function ImportScreen({ onImported }: Props) {
+export function ImportScreen({ onImported, onCancel }: Props) {
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -61,9 +62,18 @@ export function ImportScreen({ onImported }: Props) {
         </p>
       )}
 
-      <button type="button" className="primary" onClick={() => tryImport(text)}>
-        Importer
-      </button>
+      <div className="actions">
+        <button type="button" className="secondary" onClick={onCancel}>
+          Annuler
+        </button>
+        <button type="button" className="primary" onClick={() => tryImport(text)}>
+          Importer
+        </button>
+      </div>
+      <p className="legend">
+        Si un personnage du même nom existe déjà, son build sera mis à jour (après confirmation) en
+        gardant ses PV et ses consommables.
+      </p>
     </section>
   );
 }

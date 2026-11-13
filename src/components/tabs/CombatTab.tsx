@@ -13,7 +13,9 @@ import {
 import { signed, trCore, trCoreOr } from '../../i18n/translate.ts';
 import { trName } from '../../i18n/names.ts';
 import { weaponName } from '../../i18n/itemNames.ts';
+import type { GameState } from '../../game/state.ts';
 import { Name } from '../Name.tsx';
+import { HeroPoints } from '../HeroPoints.tsx';
 
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
@@ -30,12 +32,19 @@ function extraDamage(s: string): string {
   return s.replace(/\bprecision\b/i, 'précision');
 }
 
-export function CombatTab({ c }: { c: Character }) {
+interface Props {
+  c: Character;
+  state: GameState;
+  onChange: (next: GameState) => void;
+}
+
+export function CombatTab({ c, state, onChange }: Props) {
   const dc = classDC(c);
   const perc = perception(c);
 
   return (
     <>
+      <HeroPoints state={state} onChange={onChange} />
       <section className="card">
         <h3>Défenses</h3>
         <div className="stats">

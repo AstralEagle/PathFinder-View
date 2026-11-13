@@ -466,6 +466,251 @@ button {
   margin: 0;
 }
 
+/* --- Liste des personnages --- */
+
+.roster-item {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.roster-item:last-child {
+  border-bottom: none;
+}
+
+.roster-open {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.6rem 0;
+  background: none;
+  border: none;
+  color: var(--ink);
+  text-align: left;
+}
+
+.roster-open strong {
+  font-size: 1.1rem;
+  color: var(--green);
+}
+
+.icon-button {
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid var(--parchment-dark);
+  border-radius: 6px;
+  color: var(--green);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.icon-button.danger {
+  color: var(--red);
+  align-self: center;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.5rem;
+}
+
+/* --- En-tête de fiche --- */
+
+.sheet-head .sheet-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.sheet-head {
+  justify-content: flex-start;
+}
+
+/* --- Barre de PV --- */
+
+.app.with-hp-bar {
+  padding-bottom: 9.5rem;
+}
+
+.hp-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  padding: 0.5rem 0.75rem;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: 3px solid var(--green);
+  box-shadow: 0 -2px 8px rgb(0 0 0 / 0.15);
+}
+
+.hp-bar > * {
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hp-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hp-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.hp-count .hp-label {
+  font-weight: 700;
+  color: var(--red);
+}
+
+.hp-count strong {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.hp-zero {
+  color: var(--red);
+}
+
+.temp-chip {
+  min-height: 32px;
+  padding: 0 0.5rem;
+  border: 1px solid var(--green-light);
+  border-radius: 999px;
+  background: #e3efe7;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.hp-quick,
+.hp-input {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.hp-btn {
+  min-width: 44px;
+  padding: 0 0.6rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  color: #fff;
+}
+
+.hp-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.hp-btn.minus {
+  background: var(--red);
+}
+
+.hp-btn.plus {
+  background: var(--green);
+}
+
+.hp-btn.temp {
+  background: var(--green-light);
+}
+
+.hp-gauge {
+  height: 6px;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  background: var(--parchment-dark);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hp-gauge-fill {
+  height: 100%;
+  background: var(--red);
+  transition: width 0.2s;
+}
+
+.hp-input input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 0.6rem;
+  font-size: 1.1rem;
+  border: 1px solid var(--parchment-dark);
+  border-radius: 6px;
+  background: #fff;
+}
+
+/* --- Points d'héroïsme --- */
+
+.hero-points {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.hero-point {
+  width: 52px;
+  height: 52px;
+  font-size: 1.75rem;
+  line-height: 1;
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--parchment-dark);
+}
+
+.hero-point.filled {
+  background: var(--green);
+  color: #f5d76e;
+}
+
+/* --- Consommables --- */
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.stepper button {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--green);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--green);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.stepper button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.stepper strong {
+  min-width: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
 @media (min-width: 48rem) {
   .tab-panel {
     columns: 2;
