@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { Settings } from '../settings.ts';
+import { clearDetailsCache } from '../details/packs.ts';
 import { Modal } from './Modal.tsx';
 
 interface Props {
@@ -58,6 +60,8 @@ export function SettingsDialog({
   onChangeCharacter,
   onClose,
 }: Props) {
+  const [cacheCleared, setCacheCleared] = useState(false);
+
   return (
     <Modal title="Paramètres" onClose={onClose}>
       <Choice
@@ -99,6 +103,24 @@ export function SettingsDialog({
           }}
         >
           Changer de personnage
+        </button>
+      </fieldset>
+
+      <fieldset className="setting">
+        <legend>Descriptions</legend>
+        <p className="muted">
+          Les descriptions viennent de Pathfinder-fr et sont gardées en cache pour le hors-ligne.
+          Videz le cache pour récupérer les dernières traductions.
+        </p>
+        <button
+          type="button"
+          className="secondary full"
+          disabled={cacheCleared}
+          onClick={() => {
+            void clearDetailsCache().then(() => setCacheCleared(true));
+          }}
+        >
+          {cacheCleared ? 'Cache vidé' : 'Vider le cache des descriptions'}
         </button>
       </fieldset>
 

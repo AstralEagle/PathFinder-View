@@ -87,7 +87,7 @@ export function CombatTab({ c, state, onChange }: Props) {
             return (
               <li key={`${w.name}-${i}`} className="attack">
                 <div className="attack-name">
-                  <Name {...weaponName(w, trName)} />
+                  <Name {...weaponName(w, trName)} detail={{ kind: 'item', en: w.name }} />
                 </div>
                 <div className="attack-line">
                   <strong className="attack-bonus">

@@ -37,16 +37,30 @@ export function IdentityTab({ c }: { c: Character }) {
         <h3>Identité</h3>
         <dl className="fields">
           <Field label="Classe">
-            <Name en={c.className} fr={trCore('classes', c.className) ?? undefined} />
+            <Name
+              en={c.className}
+              fr={trCore('classes', c.className) ?? undefined}
+              detail={{ kind: 'class' }}
+            />
           </Field>
           <Field label="Niveau">{c.level}</Field>
           <Field label="Ascendance">
-            <Name en={c.ancestry} fr={trCore('ancestries', c.ancestry) ?? undefined} />
+            <Name
+              en={c.ancestry}
+              fr={trCore('ancestries', c.ancestry) ?? undefined}
+              detail={{ kind: 'ancestry' }}
+            />
           </Field>
-          <Field label="Héritage">{c.heritage ? <Name en={c.heritage} /> : EMPTY}</Field>
+          <Field label="Héritage">
+            {c.heritage ? <Name en={c.heritage} detail={{ kind: 'heritage' }} /> : EMPTY}
+          </Field>
           <Field label="Historique">
             {c.background ? (
-              <Name en={c.background} fr={trCore('backgrounds', c.background) ?? undefined} />
+              <Name
+                en={c.background}
+                fr={trCore('backgrounds', c.background) ?? undefined}
+                detail={{ kind: 'background' }}
+              />
             ) : (
               EMPTY
             )}

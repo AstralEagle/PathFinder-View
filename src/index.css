@@ -436,6 +436,99 @@ button {
   vertical-align: middle;
 }
 
+/* Nom touchable : ouvre la description. */
+.name-link {
+  display: inline;
+  min-height: 0;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: none;
+  text-decoration: underline dotted var(--green-light);
+  text-underline-offset: 3px;
+}
+
+.name-link:hover,
+.name-link:focus-visible {
+  color: var(--green);
+  text-decoration-style: solid;
+}
+
+/* Sur mobile, toute la ligne est une cible tactile confortable. */
+.feats li .name-link,
+.items li .name-link,
+.attack-name .name-link {
+  min-height: 32px;
+}
+
+/* --- Fenêtre de détail --- */
+
+.detail-en {
+  margin: -0.25rem 0 0.75rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.detail-meta {
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--parchment);
+  border-radius: 6px;
+}
+
+.detail-meta div {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.detail-meta dt {
+  font-weight: 700;
+  color: var(--green);
+}
+
+.detail-meta dd {
+  margin: 0;
+}
+
+.detail-body {
+  line-height: 1.55;
+}
+
+.detail-body p {
+  margin: 0 0 0.6rem;
+}
+
+.detail-body hr {
+  border: none;
+  border-top: 1px solid var(--parchment-dark);
+  margin: 0.75rem 0;
+}
+
+.detail-body table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.detail-body td,
+.detail-body th {
+  border: 1px solid var(--parchment-dark);
+  padding: 0.25rem 0.4rem;
+}
+
+.detail-source {
+  margin: 1rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--parchment-dark);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.detail-source a {
+  color: var(--green);
+}
+
 /* --- Identité --- */
 
 .abilities {

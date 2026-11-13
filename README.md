@@ -49,6 +49,8 @@ Les termes de base (caractéristiques, compétences, rangs, runes…) sont dans 
 | `npm run i18n:missing -- perso.json` | Même chose pour un export choisi                                         |
 | `npm run i18n:import`                | Retélécharge les noms Pathfinder-fr (noms seulement, aucune description) |
 
+**Descriptions** : toucher un don, un objet, une capacité, la classe, l'ascendance, l'héritage ou l'historique ouvre sa description. L'appli la demande à Pathfinder-fr (fichiers JSON publics sur GitHub), une catégorie à la fois, puis la garde en cache sur l'appareil pour le hors-ligne. Paramètres → « Vider le cache des descriptions » force un nouveau téléchargement.
+
 Pour corriger ou compléter un nom, ajoutez une ligne `"Nom anglais": "Nom officiel"` dans `names.override.fr.json`.
 
 Les traductions Pathfinder-fr ne sont pas toutes officielles et sont réservées à un usage non commercial (OGL / Pathfinder Community Use Policy). Crédits : l'équipe et les traducteurs de Pathfinder-fr.

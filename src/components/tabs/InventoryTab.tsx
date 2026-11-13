@@ -19,7 +19,7 @@ function ItemList({ items, state, onChange }: Omit<Props, 'c'> & { items: Equipm
         const tracked = isConsumable(e) && e.name in state.consumables;
         return (
           <li key={`${e.name}-${i}`} className={tracked ? 'item consumable' : 'item'}>
-            <Name en={e.name} />
+            <Name en={e.name} detail={{ kind: 'item' }} />
             {tracked ? (
               <Stepper
                 value={state.consumables[e.name] ?? 0}
@@ -58,7 +58,7 @@ export function InventoryTab({ c, state, onChange }: Props) {
         <ul className="items">
           {c.weapons.map((w, i) => (
             <li key={`${w.name}-${i}`} className="item">
-              <Name {...weaponName(w, trName)} />
+              <Name {...weaponName(w, trName)} detail={{ kind: 'item', en: w.name }} />
               {w.qty !== 1 && <span className="qty">× {w.qty}</span>}
             </li>
           ))}
@@ -72,7 +72,7 @@ export function InventoryTab({ c, state, onChange }: Props) {
           {c.armor.map((a, i) => (
             <li key={`${a.name}-${i}`} className="item">
               <span>
-                <Name {...armorName(a, trName)} />
+                <Name {...armorName(a, trName)} detail={{ kind: 'item', en: a.name }} />
                 <span className="muted">
                   {' '}
                   · {trCoreOr('armorCategories', a.prof)}
