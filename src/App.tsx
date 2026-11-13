@@ -20,6 +20,7 @@ import { SettingsDialog } from './components/SettingsDialog.tsx';
 import { sheetTabs, type TabKey } from './components/sheetTabs.ts';
 import { DetailDialog } from './components/DetailDialog.tsx';
 import { AboutDialog } from './components/AboutDialog.tsx';
+import { CharacterTitle } from './components/CharacterTitle.tsx';
 import { DetailContext, type DetailRequest } from './details/DetailContext.ts';
 import { TranslationContext } from './sources/TranslationContext.ts';
 import { useTranslationState } from './sources/useTranslationState.ts';
@@ -99,7 +100,11 @@ export default function App() {
         <DetailContext.Provider value={setDetail}>
           <div className={view.screen === 'sheet' ? 'app with-hp-bar' : 'app'}>
             <header className="app-header">
-              <h1>Fiche PF2</h1>
+              {view.screen === 'sheet' && openCharacter ? (
+                <CharacterTitle c={openCharacter} />
+              ) : (
+                <h1>Fiche PF2</h1>
+              )}
               <button
                 type="button"
                 className="burger"

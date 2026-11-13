@@ -1,8 +1,6 @@
 import type { Character } from '../pathbuilder/model.ts';
 import type { GameState } from '../game/state.ts';
 import { maxHp } from '../rules/character.ts';
-import { trCore } from '../i18n/translate.ts';
-import { useTr } from '../sources/TranslationContext.ts';
 import { CombatTab } from './tabs/CombatTab.tsx';
 import { SkillsTab } from './tabs/SkillsTab.tsx';
 import { ActionsTab } from './tabs/ActionsTab.tsx';
@@ -22,23 +20,13 @@ interface Props {
 }
 
 export function Sheet({ character: c, state, onStateChange, tab, onTabChange }: Props) {
-  const trName = useTr();
   const max = maxHp(c);
   const tabs = sheetTabs(c);
   const current = tabs.some((t) => t.key === tab) ? tab : 'combat';
 
-  const className = trCore('classes', c.className) ?? trName(c.className) ?? c.className;
-  const ancestry = trCore('ancestries', c.ancestry) ?? trName(c.ancestry) ?? c.ancestry;
-
+  // Le nom, la classe et le niveau sont affichés dans l'en-tête de l'appli (CharacterTitle).
   return (
     <div className="sheet">
-      <div className="sheet-head">
-        <h2 className="char-name">{c.name}</h2>
-        <p className="char-sub">
-          {className} {ancestry.toLowerCase()} · niveau {c.level}
-        </p>
-      </div>
-
       {/* Onglets visibles sur grand écran ; sur mobile, la navigation passe par le menu burger. */}
       <nav className="tabs" aria-label="Sections de la fiche">
         {tabs.map((t) => (

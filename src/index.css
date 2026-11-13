@@ -91,6 +91,29 @@ button {
   padding-top: calc(0.35rem + env(safe-area-inset-top));
 }
 
+.header-title {
+  min-width: 0;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--parchment);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-title p {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.85;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .burger {
   display: flex;
   flex-direction: column;
@@ -260,7 +283,7 @@ button {
 
 .tabs {
   position: sticky;
-  top: 3.25rem;
+  top: 3.5rem;
   z-index: 1;
   overflow-x: auto;
   gap: 0.25rem;
