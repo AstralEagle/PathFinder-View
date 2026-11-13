@@ -138,13 +138,21 @@ button {
   margin-bottom: 0.75rem;
 }
 
-.app-footer {
-  padding: 1rem;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-  font-size: 0.75rem;
-  color: var(--ink-soft);
-  border-top: 1px solid var(--parchment-dark);
-  text-align: center;
+.about h3 {
+  margin-top: 1rem;
+}
+
+.about ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+
+.about li {
+  margin-bottom: 0.4rem;
+}
+
+.about a {
+  color: var(--green);
 }
 
 /* --- Boutons et formulaires --- */

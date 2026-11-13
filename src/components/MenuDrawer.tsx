@@ -9,6 +9,7 @@ interface Props {
   onCharacters: () => void;
   onImport: () => void;
   onSettings: () => void;
+  onAbout: () => void;
   onClose: () => void;
 }
 
@@ -19,6 +20,7 @@ export function MenuDrawer({
   onCharacters,
   onImport,
   onSettings,
+  onAbout,
   onClose,
 }: Props) {
   // Chaque action ferme le menu.
@@ -64,6 +66,11 @@ export function MenuDrawer({
         <li>
           <button type="button" className="menu-item" onClick={run(onSettings)}>
             Paramètres
+          </button>
+        </li>
+        <li>
+          <button type="button" className="menu-item" onClick={run(onAbout)}>
+            À propos
           </button>
         </li>
       </ul>

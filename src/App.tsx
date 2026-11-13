@@ -19,6 +19,7 @@ import { MenuDrawer } from './components/MenuDrawer.tsx';
 import { SettingsDialog } from './components/SettingsDialog.tsx';
 import { sheetTabs, type TabKey } from './components/sheetTabs.ts';
 import { DetailDialog } from './components/DetailDialog.tsx';
+import { AboutDialog } from './components/AboutDialog.tsx';
 import { DetailContext, type DetailRequest } from './details/DetailContext.ts';
 import { TranslationContext } from './sources/TranslationContext.ts';
 import { useTranslationState } from './sources/useTranslationState.ts';
@@ -36,6 +37,7 @@ export default function App() {
   const [tab, setTab] = useState<TabKey>('combat');
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [detail, setDetail] = useState<DetailRequest | null>(null);
   const { translation, groupStatus, reloadGroup, local, clearLocal } = useTranslationState(
     settings.groupUrl,
@@ -145,14 +147,7 @@ export default function App() {
               )}
             </main>
 
-            <footer className="app-footer">
-              <p>
-                Outil de fan non officiel, non commercial. Pathfinder est une marque déposée de
-                Paizo Inc. Cet outil n’est ni publié, ni approuvé, ni soutenu par Paizo ou Black
-                Book Éditions. Traductions : Black Book Éditions et communauté Pathfinder-fr ;
-                textes anglais : système Foundry pf2e.
-              </p>
-            </footer>
+            {aboutOpen && <AboutDialog onClose={() => setAboutOpen(false)} />}
 
             {menuOpen && (
               <MenuDrawer
@@ -162,6 +157,7 @@ export default function App() {
                 onCharacters={goHome}
                 onImport={() => setView({ screen: 'import' })}
                 onSettings={() => setSettingsOpen(true)}
+                onAbout={() => setAboutOpen(true)}
                 onClose={() => setMenuOpen(false)}
               />
             )}
