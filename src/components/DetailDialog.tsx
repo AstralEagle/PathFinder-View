@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import { Modal } from './Modal.tsx';
+import { Name } from './Name.tsx';
 import { cleanEnrichers } from '../details/enrichers.ts';
 import type { DetailRequest } from '../details/DetailContext.ts';
 import { resolveDetail, SOURCE_LABELS, nameSource, type ResolvedDetail } from '../sources/chain.ts';
@@ -117,6 +118,23 @@ export function DetailDialog({ request, onClose }: Props) {
   return (
     <Modal title={title} onClose={onClose}>
       {title !== request.en && <p className="detail-en">{request.en}</p>}
+
+      {request.runes && (
+        <div className="detail-runes">
+          <h3>Runes</h3>
+          {request.runes.length === 0 ? (
+            <p className="muted">Aucune rune.</p>
+          ) : (
+            <ul>
+              {request.runes.map((r) => (
+                <li key={r}>
+                  <Name en={r} detail={{ kind: 'item' }} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       {!translated && (
         <LocalNameForm en={request.en} onSave={(fr) => setLocalName(request.en, fr)} />

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import flacon from '../../fixtures/flacon.json';
 import { parsePathbuilder } from '../pathbuilder/parse.ts';
-import { armorName, weaponName } from './itemNames.ts';
+import { armorName, armorRunes, weaponName, weaponRunes } from './itemNames.ts';
 import { createLookup } from './lookup.ts';
 import { trName } from './names.ts';
 
@@ -27,6 +27,27 @@ describe('weaponName', () => {
   it('se replie en VO si une rune de propriété manque', () => {
     const w = { ...c.weapons[0]!, runes: ['Unknown Rune'] };
     expect(weaponName(w, trName).fr).toBeNull();
+  });
+});
+
+describe('runes', () => {
+  it('liste les runes de l’arbalète', () => {
+    expect(weaponRunes(c.weapons[0]!)).toEqual(['Weapon Potency (+1)', 'Striking']);
+    expect(weaponRunes(c.weapons[1]!)).toEqual([]);
+  });
+  it('gère frappe supérieure, résilience et propriétés', () => {
+    expect(
+      weaponRunes({
+        ...c.weapons[0]!,
+        potency: 2,
+        striking: 'greaterStriking',
+        runes: ['Flaming'],
+      }),
+    ).toEqual(['Weapon Potency (+2)', 'Striking (Greater)', 'Flaming']);
+    expect(armorRunes({ ...c.armor[0]!, potency: 1, resilient: 'resilient' })).toEqual([
+      'Armor Potency (+1)',
+      'Resilient',
+    ]);
   });
 });
 

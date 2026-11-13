@@ -13,7 +13,7 @@ interface Props {
    * Si fourni, le nom devient touchable et ouvre la description.
    * `en` permet de chercher un autre nom que celui affiché (ex. l'arme sans ses runes).
    */
-  detail?: { kind: DetailKind; en?: string };
+  detail?: { kind: DetailKind; en?: string; runes?: string[] };
 }
 
 /**
@@ -63,7 +63,9 @@ export function Name({ en, fr, detail }: Props) {
     <button
       type="button"
       className="name name-link"
-      onClick={() => openDetail({ kind: detail.kind, en: detail.en ?? en, label })}
+      onClick={() =>
+        openDetail({ kind: detail.kind, en: detail.en ?? en, label, runes: detail.runes })
+      }
     >
       {content}
     </button>

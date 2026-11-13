@@ -537,6 +537,23 @@ button {
   color: var(--green);
 }
 
+.detail-runes {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--parchment-dark);
+  border-left: 3px solid var(--green);
+  border-radius: 6px;
+}
+
+.detail-runes h3 {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.detail-runes li {
+  padding: 0.2rem 0;
+}
+
 .detail-tags {
   display: flex;
   flex-wrap: wrap;

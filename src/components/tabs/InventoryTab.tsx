@@ -2,7 +2,7 @@ import type { Character, EquipmentItem } from '../../pathbuilder/model.ts';
 import { adjustConsumable, isConsumable, type GameState } from '../../game/state.ts';
 import { trCoreOr } from '../../i18n/translate.ts';
 import { useTr } from '../../sources/TranslationContext.ts';
-import { armorName, weaponName } from '../../i18n/itemNames.ts';
+import { armorName, armorRunes, weaponName, weaponRunes } from '../../i18n/itemNames.ts';
 import { Name } from '../Name.tsx';
 import { Stepper } from '../Stepper.tsx';
 
@@ -60,7 +60,10 @@ export function InventoryTab({ c, state, onChange }: Props) {
         <ul className="items">
           {c.weapons.map((w, i) => (
             <li key={`${w.name}-${i}`} className="item">
-              <Name {...weaponName(w, trName)} detail={{ kind: 'item', en: w.name }} />
+              <Name
+                {...weaponName(w, trName)}
+                detail={{ kind: 'item', en: w.name, runes: weaponRunes(w) }}
+              />
               {w.qty !== 1 && <span className="qty">× {w.qty}</span>}
             </li>
           ))}
@@ -74,7 +77,10 @@ export function InventoryTab({ c, state, onChange }: Props) {
           {c.armor.map((a, i) => (
             <li key={`${a.name}-${i}`} className="item">
               <span>
-                <Name {...armorName(a, trName)} detail={{ kind: 'item', en: a.name }} />
+                <Name
+                  {...armorName(a, trName)}
+                  detail={{ kind: 'item', en: a.name, runes: armorRunes(a) }}
+                />
                 <span className="muted">
                   {' '}
                   · {trCoreOr('armorCategories', a.prof)}

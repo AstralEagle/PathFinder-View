@@ -7,6 +7,8 @@ export interface DetailRequest {
   en: string;
   /** Nom affiché dans la fiche (par ex. avec les runes d'une arme). */
   label?: string;
+  /** Pour une arme ou une armure : noms anglais des runes gravées (vide = aucune rune). */
+  runes?: string[];
 }
 
 /** Ouvre la fenêtre de détail d'un élément. */

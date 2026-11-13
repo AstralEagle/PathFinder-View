@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { Character, Weapon } from '../../pathbuilder/model.ts';
 import { damageFormula, multipleAttackBonuses, weaponAttack } from '../../rules/character.ts';
 import { extraDamageFr, signed, trCore } from '../../i18n/translate.ts';
-import { weaponName } from '../../i18n/itemNames.ts';
+import { weaponName, weaponRunes } from '../../i18n/itemNames.ts';
 import { useTr } from '../../sources/TranslationContext.ts';
 import {
   ACTION_GROUPS,
@@ -149,7 +149,10 @@ function Strikes({ weapons }: { weapons: Weapon[] }) {
             <li key={`${w.name}-${i}`}>
               <span className="glyph">◆</span>
               <div className="strike-body">
-                <Name {...weaponName(w, tr)} detail={{ kind: 'item', en: w.name }} />
+                <Name
+                  {...weaponName(w, tr)}
+                  detail={{ kind: 'item', en: w.name, runes: weaponRunes(w) }}
+                />
                 <div className="strike-line">
                   {a.attack !== null && (
                     <strong className="strike-map" title="1re / 2e / 3e attaque du tour">

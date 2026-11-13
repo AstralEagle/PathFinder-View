@@ -30,6 +30,38 @@ function runedName(
   return { en: display, fr: complete ? parts.join(' ') : null };
 }
 
+const FUNDAMENTAL_RUNE_ITEMS: Record<string, string> = {
+  striking: 'Striking',
+  greaterstriking: 'Striking (Greater)',
+  majorstriking: 'Striking (Major)',
+  resilient: 'Resilient',
+  greaterresilient: 'Resilient (Greater)',
+  majorresilient: 'Resilient (Major)',
+};
+
+/** Noms anglais (Foundry / Pathfinder-fr) des runes gravées : puissance, frappe/résilience, propriétés. */
+function runeItems(
+  potencyPrefix: 'Weapon' | 'Armor',
+  potency: number,
+  fundamental: string,
+  propertyRunes: string[],
+): string[] {
+  const out: string[] = [];
+  if (potency > 0) out.push(`${potencyPrefix} Potency (+${potency})`);
+  const f = FUNDAMENTAL_RUNE_ITEMS[fundamental.toLowerCase()];
+  if (f) out.push(f);
+  out.push(...propertyRunes);
+  return out;
+}
+
+export function weaponRunes(w: Weapon): string[] {
+  return runeItems('Weapon', w.potency, w.striking, w.runes);
+}
+
+export function armorRunes(a: Armor): string[] {
+  return runeItems('Armor', a.potency, a.resilient, a.runes);
+}
+
 export function weaponName(w: Weapon, lookup: Lookup): DisplayName {
   return runedName(w.name, w.display, w.potency, w.striking, w.material, w.runes, lookup);
 }

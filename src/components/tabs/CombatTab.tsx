@@ -12,7 +12,7 @@ import {
 } from '../../rules/character.ts';
 import { extraDamageFr, signed, trCore, trCoreOr } from '../../i18n/translate.ts';
 import { useTr } from '../../sources/TranslationContext.ts';
-import { weaponName } from '../../i18n/itemNames.ts';
+import { weaponName, weaponRunes } from '../../i18n/itemNames.ts';
 import type { GameState } from '../../game/state.ts';
 import { formatDistance } from '../../rules/units.ts';
 import { useSettings } from '../../settings.ts';
@@ -85,7 +85,10 @@ export function CombatTab({ c, state, onChange }: Props) {
             return (
               <li key={`${w.name}-${i}`} className="attack">
                 <div className="attack-name">
-                  <Name {...weaponName(w, trName)} detail={{ kind: 'item', en: w.name }} />
+                  <Name
+                    {...weaponName(w, trName)}
+                    detail={{ kind: 'item', en: w.name, runes: weaponRunes(w) }}
+                  />
                 </div>
                 <div className="attack-line">
                   <strong className="attack-bonus">
