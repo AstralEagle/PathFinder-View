@@ -1164,6 +1164,53 @@ body.no-scroll {
   gap: 0.5rem;
 }
 
+/* --- Noms tronqués (« … ») dans les listes ; nom complet au survol et dans la fenêtre de détail --- */
+
+.items .name,
+.feats .name,
+.actions-list .name,
+.attack-name .name {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item > .name {
+  flex: 1 1 auto;
+}
+
+/* Armure : nom + « · Légère · portée » sur une ligne. */
+.item > span:first-child:not(.name) {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.item > span:first-child:not(.name) > .muted {
+  flex-shrink: 0;
+}
+
+.feats li {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.feats li > .feat-level,
+.feats li > .muted {
+  flex-shrink: 0;
+}
+
+.actions-list li > *,
+.strike-body {
+  min-width: 0;
+}
+
 .stepper {
   display: inline-flex;
   align-items: center;

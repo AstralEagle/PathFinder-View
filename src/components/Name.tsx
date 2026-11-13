@@ -50,9 +50,13 @@ export function Name({ en, fr, detail }: Props) {
     );
   }
 
+  // Nom complet au survol : utile quand il est tronqué (« … ») dans une liste.
+  const fullName =
+    nameDisplay === 'en' || !translated || translated === en ? en : `${translated} (${en})`;
+
   if (!detail) {
     return (
-      <span className="name" title={nameDisplay === 'fr' && translated ? en : undefined}>
+      <span className="name" title={fullName}>
         {content}
       </span>
     );
@@ -63,6 +67,7 @@ export function Name({ en, fr, detail }: Props) {
     <button
       type="button"
       className="name name-link"
+      title={fullName}
       onClick={() =>
         openDetail({ kind: detail.kind, en: detail.en ?? en, label, runes: detail.runes })
       }
