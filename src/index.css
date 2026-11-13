@@ -1,0 +1,91 @@
+:root {
+  --parchment: #f3ead2;
+  --parchment-dark: #e6d9b5;
+  --ink: #2a2418;
+  --ink-soft: #5a4f3a;
+  --green: #1f4d36;
+  --green-light: #2e6b4c;
+
+  color-scheme: light;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--parchment);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--parchment);
+}
+
+h1,
+h2,
+h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--green);
+  margin: 0 0 0.5rem;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app-header {
+  background: var(--green);
+  color: var(--parchment);
+  padding: 1rem;
+  padding-top: calc(1rem + env(safe-area-inset-top));
+}
+
+.app-header h1 {
+  color: var(--parchment);
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.card {
+  background: #fbf6e8;
+  border: 1px solid var(--parchment-dark);
+  border-top: 4px solid var(--green);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.demo strong {
+  font-size: 1.5rem;
+  color: var(--green);
+}
+
+.app-footer {
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--parchment-dark);
+  text-align: center;
+}

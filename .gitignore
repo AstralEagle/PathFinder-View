@@ -1,0 +1,11 @@
+node_modules
+dist
+dev-dist
+coverage
+*.local
+*.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.claude/settings.local.json
