@@ -43,3 +43,4 @@ Le document de référence complet est [CADRAGE.md](CADRAGE.md) : périmètre V1
 - **Chaque commande n'exécute qu'une seule action**, une par appel, en accord avec les autorisations de [.claude/settings.json](.claude/settings.json) : `npm …`, `npx …`, `node …`, `git …`, `ls`, `mkdir`, `cp`, etc.
 - **Jamais de chaînes ni de combinaisons** : pas de `|`, `&`, `&&`, `;`, pas de `cd` ni de script inline. Utiliser des chemins.
 - Préférer les outils Read / Edit / Write / Glob / Grep aux commandes shell pour lire et modifier les fichiers.
+- **Windows + Bash** : lancer les scripts npm avec `npm --prefix "C:/Git Lib/PathFinder 2 Viewer" <script>`. Depuis un dossier courant en `c:\` minuscule, Vitest se charge deux fois et toutes les suites échouent (« Cannot read properties of undefined (reading 'config') »).

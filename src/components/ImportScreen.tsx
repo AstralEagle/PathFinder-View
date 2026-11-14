@@ -1,9 +1,9 @@
 import { useState, type ChangeEvent } from 'react';
-import type { Character } from '../pathbuilder/model.ts';
-import { parsePathbuilderText } from '../pathbuilder/parse.ts';
+import type { Dictionary } from '../i18n/lookup.ts';
+import { parseImportText, type ImportEntry } from '../game/backup.ts';
 
 interface Props {
-  onImported: (character: Character, rawJson: string) => void;
+  onImported: (entries: ImportEntry[], localNames: Dictionary) => void;
   onCancel: () => void;
 }
 
@@ -12,10 +12,10 @@ export function ImportScreen({ onImported, onCancel }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   function tryImport(raw: string) {
-    const result = parsePathbuilderText(raw);
+    const result = parseImportText(raw);
     if (result.ok) {
       setError(null);
-      onImported(result.character, raw);
+      onImported(result.entries, result.localNames);
     } else {
       setError(result.error);
     }
@@ -37,7 +37,8 @@ export function ImportScreen({ onImported, onCancel }: Props) {
       <h2>Importer un personnage</h2>
       <p>
         Dans Pathbuilder 2e : <em>Menu → Export → Export JSON</em>, puis collez le texte ici ou
-        choisissez le fichier <code>.json</code>.
+        choisissez le fichier <code>.json</code>. Vous pouvez aussi importer une sauvegarde exportée
+        depuis cette appli (un ou plusieurs personnages, avec leur état de jeu).
       </p>
 
       <label className="file-button">
@@ -71,8 +72,9 @@ export function ImportScreen({ onImported, onCancel }: Props) {
         </button>
       </div>
       <p className="legend">
-        Si un personnage du même nom existe déjà, son build sera mis à jour (après confirmation) en
-        gardant ses PV et ses consommables.
+        Si un personnage du même nom existe déjà, l’appli demande confirmation. Un export
+        Pathbuilder met à jour son build en gardant son état de jeu ; une sauvegarde de l’appli
+        remplace aussi son état de jeu.
       </p>
     </section>
   );

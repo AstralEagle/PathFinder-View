@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { Character } from './pathbuilder/model.ts';
 import { parsePathbuilderText } from './pathbuilder/parse.ts';
+import type { Dictionary } from './i18n/lookup.ts';
+import {
+  backupFileName,
+  exportAllData,
+  exportCharacterData,
+  type ImportEntry,
+} from './game/backup.ts';
+import { downloadJson } from './components/download.ts';
 import type { GameState } from './game/state.ts';
 import { setNamedAmmoEnabled } from './game/namedAmmo.ts';
 import {
@@ -51,9 +58,8 @@ export default function App() {
     (req: DetailRequest) => setDetails((stack) => [...stack, req]),
     [],
   );
-  const { translation, groupStatus, reloadGroup, local, clearLocal } = useTranslationState(
-    settings.groupUrl,
-  );
+  const { translation, groupStatus, reloadGroup, local, clearLocal, mergeLocal } =
+    useTranslationState(settings.groupUrl);
 
   // Sauvegarde automatique à chaque modification.
   useEffect(() => saveStore(store), [store]);
@@ -74,21 +80,46 @@ export default function App() {
     setView({ screen: 'sheet', id });
   }
 
-  function onImported(c: Character, raw: string) {
-    const existing = findByName(store, c.name);
-    if (existing) {
-      const ok = window.confirm(
-        `« ${existing.name} » existe déjà sur cet appareil.\n\n` +
-          'Mettre à jour son build ? Son état de jeu (PV, consommables…) sera conservé.',
-      );
-      if (!ok) return;
-      setStore(updateBuild(store, existing.id, c, raw));
-      openSheet(existing.id);
-      return;
+  function onImported(entries: ImportEntry[], importedNames: Dictionary) {
+    let next = store;
+    let lastId: string | null = null;
+    let count = 0;
+    for (const { character, raw, state } of entries) {
+      const existing = findByName(next, character.name);
+      if (existing) {
+        const ok = window.confirm(
+          `« ${existing.name} » existe déjà sur cet appareil.\n\n` +
+            (state
+              ? 'Remplacer son build ET son état de jeu (PV, consommables, munitions…) par ceux du fichier ?'
+              : 'Mettre à jour son build ? Son état de jeu (PV, consommables…) sera conservé.'),
+        );
+        if (!ok) continue;
+        next = updateBuild(next, existing.id, character, raw);
+        if (state) next = updateState(next, existing.id, state);
+        lastId = existing.id;
+      } else {
+        const added = addCharacter(next, character, raw);
+        next = added.store;
+        if (state) next = updateState(next, added.id, state);
+        lastId = added.id;
+      }
+      count++;
     }
-    const added = addCharacter(store, c, raw);
-    setStore(added.store);
-    openSheet(added.id);
+    if (Object.keys(importedNames).length > 0) mergeLocal(importedNames);
+    if (count === 0) return;
+    setStore(next);
+    if (count === 1 && lastId) openSheet(lastId);
+    else goHome();
+  }
+
+  function exportOne(id: string) {
+    const sc = store.characters.find((x) => x.id === id);
+    if (sc) downloadJson(exportCharacterData(sc, local), backupFileName(sc.name));
+  }
+
+  function exportAll() {
+    const date = new Date().toISOString().slice(0, 10);
+    downloadJson(exportAllData(store, local), `fiche-pf2-sauvegarde-${date}.json`);
   }
 
   function onDelete(id: string) {
@@ -136,6 +167,8 @@ export default function App() {
                   onOpen={openSheet}
                   onDelete={onDelete}
                   onImport={() => setView({ screen: 'import' })}
+                  onExport={exportOne}
+                  onExportAll={exportAll}
                 />
               )}
 
@@ -193,6 +226,7 @@ export default function App() {
                     : undefined
                 }
                 onChangeCharacter={goHome}
+                onExportCharacter={open ? () => exportOne(open.id) : undefined}
                 groupStatus={groupStatus}
                 onReloadGroup={reloadGroup}
                 localNames={local}

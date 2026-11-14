@@ -11,6 +11,8 @@ interface Props {
   /** Personnage ouvert, s'il y en a un. */
   characterName: string | null;
   onChangeCharacter: () => void;
+  /** Exporte le personnage ouvert (sauvegarde .json). */
+  onExportCharacter?: () => void;
   /** Onglet optionnel « Munitions nommées » du personnage ouvert. */
   namedAmmoEnabled: boolean;
   onToggleNamedAmmo?: (enabled: boolean) => void;
@@ -91,6 +93,7 @@ export function SettingsDialog({
   onChange,
   characterName,
   onChangeCharacter,
+  onExportCharacter,
   namedAmmoEnabled,
   onToggleNamedAmmo,
   groupStatus,
@@ -144,6 +147,11 @@ export function SettingsDialog({
         >
           Changer de personnage
         </button>
+        {onExportCharacter && (
+          <button type="button" className="secondary full settings-gap" onClick={onExportCharacter}>
+            Exporter ce personnage (.json)
+          </button>
+        )}
         {onToggleNamedAmmo && (
           <label className="toggle">
             <input

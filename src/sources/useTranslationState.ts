@@ -80,6 +80,15 @@ export function useTranslationState(groupUrl: string) {
     });
   }, []);
 
+  /** Ajoute des traductions locales (import d'une sauvegarde) ; celles du fichier l'emportent. */
+  const mergeLocal = useCallback((names: Dictionary) => {
+    setLocal((prev) => {
+      const next = { ...prev, ...names };
+      saveLocalNames(next);
+      return next;
+    });
+  }, []);
+
   const clearLocal = useCallback(() => {
     saveLocalNames({});
     setLocal({});
@@ -90,5 +99,5 @@ export function useTranslationState(groupUrl: string) {
     return { tr: buildNameLookup(sources), sources, group, lang, setLocalName };
   }, [group, local, lang, setLocalName]);
 
-  return { translation, groupStatus, reloadGroup, local, clearLocal };
+  return { translation, groupStatus, reloadGroup, local, clearLocal, mergeLocal };
 }

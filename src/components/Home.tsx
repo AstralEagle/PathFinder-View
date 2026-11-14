@@ -9,9 +9,11 @@ interface Props {
   onOpen: (id: string) => void;
   onDelete: (id: string) => void;
   onImport: () => void;
+  onExport: (id: string) => void;
+  onExportAll: () => void;
 }
 
-export function Home({ characters, onOpen, onDelete, onImport }: Props) {
+export function Home({ characters, onOpen, onDelete, onImport, onExport, onExportAll }: Props) {
   const trName = useTr();
   return (
     <>
@@ -37,6 +39,15 @@ export function Home({ characters, onOpen, onDelete, onImport }: Props) {
                 </button>
                 <button
                   type="button"
+                  className="icon-button roster-export"
+                  aria-label={`Exporter ${sc.name}`}
+                  title="Exporter (sauvegarde .json)"
+                  onClick={() => onExport(sc.id)}
+                >
+                  ⤓
+                </button>
+                <button
+                  type="button"
                   className="icon-button danger"
                   aria-label={`Supprimer ${sc.name}`}
                   onClick={() => onDelete(sc.id)}
@@ -50,8 +61,17 @@ export function Home({ characters, onOpen, onDelete, onImport }: Props) {
       </section>
 
       <button type="button" className="primary" onClick={onImport}>
-        Importer un personnage
+        Importer un personnage ou une sauvegarde
       </button>
+      {characters.length > 0 && (
+        <button type="button" className="secondary full home-export" onClick={onExportAll}>
+          Exporter tous les personnages
+        </button>
+      )}
+      <p className="legend">
+        L’export crée un fichier .json (format Pathbuilder + votre état de jeu) à importer sur un
+        autre appareil.
+      </p>
     </>
   );
 }

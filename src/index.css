@@ -1121,6 +1121,18 @@ button.skill:focus-visible {
   font-weight: 700;
 }
 
+.roster-export {
+  align-self: center;
+}
+
+.settings-gap {
+  margin-top: 0.5rem;
+}
+
+.home-export {
+  margin-top: 0.5rem;
+}
+
 .icon-button.danger {
   color: var(--red);
   align-self: center;

@@ -24,6 +24,16 @@ Puis ouvrir l'adresse affichée (par défaut http://localhost:5173).
 | `npm run build`   | Build de production dans `dist/` |
 | `npm run preview` | Sert le build localement         |
 
+## Sauvegarde et transfert entre appareils
+
+- **Exporter** : accueil → ⤓ à côté d'un personnage, « Exporter tous les personnages », ou Paramètres → « Exporter ce personnage ».
+- Le fichier garde **le format de l'export Pathbuilder** (`{"success":true,"build":{…}}`) et ajoute un bloc `pf2Viewer` : état de jeu (PV, héroïsme, consommables, munitions nommées et leurs notes…) et traductions saisies localement. « Exporter tous » produit un tableau de ces objets.
+- **Importer** : l'écran d'import habituel accepte un export Pathbuilder ordinaire comme une sauvegarde de l'appli.
+
+## Installer sur le téléphone (PWA)
+
+Ouvrir le site dans le navigateur du téléphone, puis « Ajouter à l'écran d'accueil ». L'appli fonctionne ensuite hors-ligne (les descriptions déjà consultées restent disponibles).
+
 ## Déployer sur Render
 
 Le dépôt contient un fichier [render.yaml](render.yaml) (Blueprint).
